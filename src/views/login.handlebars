@@ -1,0 +1,24 @@
+<h2>Login usuarios</h2>
+
+ {{#if mensaje}}
+ <div style=" color:green">{{mensaje}}</div>
+{{/if}}
+
+ {{#if error}}
+ <div style=" color:red">{{this.error}}</div>
+{{/if}}
+
+<form action="/api/session/login" method="post">
+
+<label for="">Email</label>
+<input type="email" name="email" id="" placeholder="Email"><br>
+
+<label for="">Password</label>
+<input type="password" name="password" placeholder="password" id=""><br><br>
+
+<input type="submit" value="Ingresar">
+
+</form>
+
+
+<p>Si no estas registrado registrate <a href="/views/registro">Aqui</a></p>

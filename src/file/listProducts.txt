@@ -1,0 +1,81 @@
+[
+     {
+          "id": 1,
+          "title": "Tomate",
+          "description": "Vegetal",
+          "code": "4100",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": [
+               "hola"
+          ]
+     },
+     {
+          "id": 2,
+          "title": "Lechuga",
+          "description": "Vegetal",
+          "code": "4101",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     },
+     {
+          "id": 3,
+          "title": "Cebolla",
+          "description": "Vegetal",
+          "code": "4101",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     },
+     {
+          "id": 4,
+          "title": "Cebolla",
+          "description": "Vegetal",
+          "code": "4102",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     },
+     {
+          "id": 5,
+          "title": "Papa",
+          "description": "Vegetal",
+          "code": "4103",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     },
+     {
+          "id": 6,
+          "title": "Yerba",
+          "description": "Vegetal",
+          "code": "4104",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     },
+     {
+          "id": 7,
+          "title": "Jamon",
+          "description": "Vegetal",
+          "code": "4105",
+          "price": 7000,
+          "status": true,
+          "stock": 1500,
+          "category": "verdura",
+          "thumbnails": []
+     }
+]
