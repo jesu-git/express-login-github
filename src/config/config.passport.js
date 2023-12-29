@@ -115,13 +115,13 @@ export const startPassport = () => {
             try {
 
                 let usuario = await usuarioModelo.findOne({ email: profile._json.email })
-       
+                 let rol = "user"
                 if (!usuario) {
 
                     let userNew = {
                         nombre: profile._json.name,
                         email: profile._json.email,
-                        rol: user,
+                        rol: rol,
                         profile
 
                     }
