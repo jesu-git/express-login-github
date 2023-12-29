@@ -1,9 +1,9 @@
 
-import express from 'express';
-import { router as router_products } from './Routers/routerProducts.js';
+import express from 'express'
+import { router as router_products } from './Routers/routerProducts.js'
 import { router as router_cart } from './Routers/routerCart.js'
 import { router as router_views } from './Routers/routerViews.js'
-import { router as router_session } from './Routers/roueterSessions.js';
+import { router as router_session } from './Routers/roueterSessions.js'
 import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
 import __dirname from './utils.js'
@@ -12,7 +12,8 @@ import mongoose from 'mongoose'
 import { messageModelo } from './dao/models/messageModelo.js'
 import sessions from 'express-session'
 import MongoStore from 'connect-mongo';
- 
+import { initPassport, startPassport } from './config/config.passport.js'
+import passport from 'passport'
 const app = express()
 const PORT = 8080
 
@@ -28,6 +29,10 @@ app.use(sessions({
         ttl:3600
     })
 }))
+initPassport()
+startPassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.engine('handlebars',engine());
 app.set('view engine','handlebars')

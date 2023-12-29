@@ -1,89 +1,58 @@
 import { Router } from "express"
 import { usuarioModelo } from "../dao/models/usuariosModel.js"
 import crypto from 'crypto'
+import { createHash, verificar } from "../utils.js"
+import passport from "passport"
 export const router = Router()
 
 
-router.post('/registro', async(req, res) => {
-
-    let { nombre, email, password } = req.body
-
-    if (!nombre || !email || !password) {
-
-        return res.redirect('/views/registro?error="ERROR, introduzca todos los campos"')
-    }
-
-    let exist = await usuarioModelo.findOne({email})
-    
-    if(exist){
-
-       return res.redirect('/views/registro?error= ERROR, El email ingresado ya esta en uso, ingrese uno nuevo')
-    }
-
-     password = crypto.createHmac("sha256","codercoder").update(password).digest("hex")
-
-     let rol = "user"
-
-     if ( email == 'adminCoder@coder.com'){
-
-        rol = "admin"
-     }
-
-     try {
-     
-        let usuario = await usuarioModelo.create({nombre,email,password,rol})
+router.post('/registro',passport.authenticate('registro',{failureRedirect:'/api/session/errorRegistro'}), async (req, res) => {
+        let {email} = req.body
         res.redirect(`/views/login?mensaje=El cliente ${email} ha sido creado correctamente`)
 
-     } catch (error) {
-        console.log(error.message)
-        res.redirect('/views/registro?error= Error inesperado')
-     }
-
-     
 })
+router.get('/errorRegistro',(req,res)=>{
+    res.redirect('/views/registro?error=Error en proceso de registro del usuario')
+})
+router.get('/errorLogin',(req,res)=>{
+    res.redirect('/views/login?error= Error en la autenticacion')
+})
+router.post('/login', passport.authenticate('login', { failureRedirect: '/api/session/errorLogin' }), async (req, res) => {
 
-router.post('/login', async(req, res) => {
 
-    let { email, password } = req.body
-     console.log(req.body)
-    if (!email || !password) {
+    req.session.usuario = { nombre: req.user.nombre, email: req.user.email, rol: req.user.rol }
 
-        return res.redirect('/views/login?error="ERROR, introduzca todos los campos"')
-    }
+    return res.redirect('/views/products')
+
+
+})
+router.get('/logout', async (req, res) => {
+
     try {
-        password = crypto.createHmac("sha256","codercoder").update(password).digest("hex")
-        let usuario = await usuarioModelo.findOne({email, password}).lean()
-        console.log("login",usuario)
-        if(!usuario){
-    
-           return res.redirect('/views/login?error= ERROR, Datos ingresados incorrectos')
-        }
-      
-    
-req.session.usuario = {nombre: usuario.nombre , email: usuario.email , rol: usuario.rol}
-      console.log(req.session.usuario)
-     res.redirect('/views/products')
-        
+        req.session.destroy((error) => {
+            if (error) {
+                return res.redirect('/views/login?error= ERROR inesperado!, intente mas tarde')
+            }
+
+            res.redirect('/views/login')
+        })
+
     } catch (error) {
-        
+
         res.status(400).json("Error inesperado")
     }
-     
+
 })
-router.get('/logout', async(req, res) => {
+router.get('/github', passport.authenticate('github', {}), (req, res) => {
+})
+router.get('/callbackgithub', passport.authenticate('github', { failureRedirect: '/api/session/errorGithub' }), (req, res) => {
+    req.session.usuario = req.user
+    console.log(req.session.usuario)
+    return res.redirect('/views/products')
 
-try { 
-req.session.destroy((error)=>{
-    if(error){
-       return res.redirect('/views/login?error= ERROR inesperado!, intente mas tarde')
-    }
+})
+router.get('/errorGithub', (req, res) => {
 
-    res.redirect('/views/login')
-})  
-         
-    } catch (error) {
-        
-        res.status(400).json("Error inesperado")
-    }
-     
+    res.status(200).json({ error: 'Error al autenticar con Github' })
+
 })

@@ -12,7 +12,7 @@ const auth = (req, res, next) => {
 
     if (!req.session.usuario) {
 
-       return  res.redirect('/views/login')
+        return res.redirect('/views/login')
 
     }
     next()
@@ -42,7 +42,8 @@ router.get('/realtimeproducts', async (req, res) => {
 router.get("/products", async (req, res) => {
 
     try {
-        let {usuario} = req.session
+        let { usuario } = req.session
+       
         let { limit = 10, sort = {}, page = 1 } = req.query
         let sortValue = {}
         if (sort === "asc") {
@@ -52,10 +53,10 @@ router.get("/products", async (req, res) => {
         }
 
 
-        let products = await productModelo.paginate({ }, { limit: limit, page: page, sort: sortValue, lean: true })
+        let products = await productModelo.paginate({}, { limit: limit, page: page, sort: sortValue, lean: true })
         let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
 
-        res.status(200).render('product', { data: products.docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, limit, page, sort, ruta ,usuario})
+        res.status(200).render('product', { data: products.docs, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, limit, page, sort, ruta, usuario })
 
     } catch (error) {
 
@@ -69,7 +70,7 @@ router.get("/cart/:cartId", async (req, res) => {
         let cartId = req.params.cartId
         let cart = await CartModelo.findById(cartId).populate('productCarts.productId').lean()
 
-        res.status(200).render('cart', { products: cart.productCarts, cartId: '657901d1973ef35614b9b24f',ruta})
+        res.status(200).render('cart', { products: cart.productCarts, cartId: '657901d1973ef35614b9b24f', ruta })
     } catch (error) {
 
     }
@@ -93,20 +94,20 @@ router.get('/registro', (req, res) => {
     let { error } = req.query
 
     res.setHeader('content-type', 'text/html')
-    res.status(200).render('registro', { error })
+    res.status(200).render('registro', { error})
 })
 router.get('/perfil', auth, (req, res) => {
 
     let usuario = req.session.usuario
     res.setHeader('content-type', 'text/html')
-    res.status(200).render('perfil', { usuario })
+    res.status(200).render('perfil', { usuario})
 
 })
 router.get('/login', (req, res) => {
 
     let { mensaje } = req.query
-    let {error}= req.query
-    
+    let { error } = req.query
+
     res.setHeader('content-type', 'text/html')
     res.status(200).render('login', { mensaje, error })
 

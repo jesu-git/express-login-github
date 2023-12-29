@@ -1,6 +1,6 @@
 import __dirname from '../utils.js'
 import path from 'path'
-import { Router, query } from 'express'
+import { Router} from 'express'
 export const router = Router()
 import { ProductsMongo } from '../dao/managerProductsMongo.js'
 import { productModelo } from '../dao/models/productModelo.js'
@@ -20,14 +20,14 @@ router.get('/', async (req, res) => {
     }
 
      let{ category } = req.query
-     console.log(category)
+
      if(category == undefined || null){
         category = {}
      }
   
     try {
 
-        let products = await productModelo.paginate({category}, { limit: limit, page: page, sort: sortValue })
+        let products = await productModelo.paginate(category, { limit: limit, page: page, sort: sortValue })
         let {totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = products
         let prevLink = '', nextLink = '';
         if (hasPrevPage) {
