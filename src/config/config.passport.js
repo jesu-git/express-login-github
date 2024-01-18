@@ -116,16 +116,19 @@ export const startPassport = () => {
 
         },
         async (accesToken, refreshToken, profile, done) => {
-
+            let Mongo = new cartsMongo()
             try {
 
                 let usuario = await usuarioModelo.findOne({ email: profile._json.email })
                 let rol = "user"
                 if (!usuario) {
-
+                    let  newCart = await Mongo.createCart()
+                    let cartId = newCart._id.valueOf()
                     let userNew = {
                         nombre: profile._json.name,
                         email: profile._json.email,
+                        edad: "",
+                        cartId:cartId,
                         rol: rol,
                         profile
 

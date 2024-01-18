@@ -1,24 +1,21 @@
-
-
-
+console.log('funciona')
 document.addEventListener('DOMContentLoaded', function () {
     const btnAgregar = document.querySelectorAll('.add-to-cart');
-  
+    const elemento = document.querySelector('#cart')
+    const cart = elemento.getAttribute('cart')
     btnAgregar.forEach(button => {
       button.addEventListener('click', function () {
         const productId = this.getAttribute('data-product-id');
-        console.log('va por aca')
-        agregarACart(productId)
-        console.log('pasoooo')
+         
+        agregarACart(productId,cart)
     
       });
     });
   
-    function agregarACart(productId) {
-      console,log('acaaaa')
-      const cartId = '65a87c904eb892f03b1ec913'
-      console.log('funcioon agregar',cartId)
-      const url = `http://localhost:8080/api/carts/${cartId}/product/${productId}`
+    function agregarACart(productId, cart) {
+
+      
+      const url = `http://localhost:8080/api/carts/${cart}/product/${productId}`
   
       fetch(url, {
         method: 'POST',

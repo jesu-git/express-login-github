@@ -74,8 +74,10 @@ router.get("/cart/:cartId", async (req, res) => {
 
             cartId = 'El carrito esta vacio'
         }
-        res.status(200).render('cart', { products: cart.productCarts, cartId: cart, ruta })
+        res.status(200).render('cart', { products: cart.productCarts, cartId: cartId, ruta })
     } catch (error) {
+
+        return console.log(error.message)
 
     }
 
