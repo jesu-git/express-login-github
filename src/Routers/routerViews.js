@@ -43,7 +43,6 @@ router.get("/products", async (req, res) => {
 
     try {
         let { usuario } = req.session
-       
         let { limit = 10, sort = {}, page = 1 } = req.query
         let sortValue = {}
         if (sort === "asc") {
@@ -67,16 +66,18 @@ router.get("/products", async (req, res) => {
 })
 router.get("/cart/:cartId", async (req, res) => {
     try {
-        let cartId = req.params.cartId
+        let cartId = req.session.usuario.cartId
+        console.log('carriitoooo',cartId)
         let cart = await CartModelo.findById(cartId).populate('productCarts.productId').lean()
+        
+        if(cartId == null || cartId == undefined){
 
-        res.status(200).render('cart', { products: cart.productCarts, cartId: '657901d1973ef35614b9b24f', ruta })
+            cartId = 'El carrito esta vacio'
+        }
+        res.status(200).render('cart', { products: cart.productCarts, cartId: cart, ruta })
     } catch (error) {
 
     }
-
-
-
 
 })
 
@@ -98,7 +99,7 @@ router.get('/registro', (req, res) => {
 })
 router.get('/perfil', auth, (req, res) => {
 
-    let usuario = req.session.usuario
+    let {usuario} = req.session
     res.setHeader('content-type', 'text/html')
     res.status(200).render('perfil', { usuario})
 

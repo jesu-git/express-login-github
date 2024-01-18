@@ -3,6 +3,8 @@ import github from 'passport-github2'
 import local from 'passport-local'
 import { usuarioModelo } from "../dao/models/usuariosModel.js"
 import { createHash, verificar } from "../utils.js"
+import {cartsMongo } from "../dao/managerCartsMongo.js"
+
 
 export const initPassport = () => {
 
@@ -14,10 +16,9 @@ export const initPassport = () => {
 
         async (req, username, password, done) => {
 
+            let { nombre, apellido, email, edad } = req.body
 
-            let { nombre, email } = req.body
-
-            if (!nombre || !email || !password) {
+            if (!nombre || !apellido || !email || !edad || !password) {
 
                 //return res.redirect('/views/registro?error="ERROR, introduzca todos los campos"')
                 return done(null, false)
@@ -28,27 +29,31 @@ export const initPassport = () => {
             if (exist) {
 
                 //return res.redirect('/views/registro?error= ERROR, El email ingresado ya esta en uso, ingrese uno nuevo')
-                return done(null, false)
+                return done(null, false, {mensaje:''})
             }
 
             //password = crypto.createHmac("sha256","codercoder").update(password).digest("hex")
             password = createHash(password)
-            let rol = "user"
+            let rol
 
             if (email == 'adminCoder@coder.com') {
 
                 rol = "admin"
             }
+            let Mongo = new cartsMongo()
 
             try {
-
-                let usuario = await usuarioModelo.create({ nombre, email, password, rol })
+                let  newCart = await Mongo.createCart()
+                let cartId = newCart._id.valueOf()
+                let usuario = await usuarioModelo.create({ nombre, apellido, email, edad, password,cartId, rol })
                 // res.redirect(`/views/login?mensaje=El cliente ${email} ha sido creado correctamente`)
                 return done(null, usuario)
 
             } catch (error) {
-                console.log(error.message)
-                res.redirect('/views/registro?error= Error inesperado')
+
+                return done(null,false,{mensaje:'Error, usuario no creado'})
+                //console.log(error.message)
+                //res.redirect('/views/registro?error= Error inesperado')
             }
 
 
@@ -72,8 +77,8 @@ export const initPassport = () => {
             }
             try {
                 //password = crypto.createHmac("sha256","codercoder").update(password).digest("hex")
-                let usuario = await usuarioModelo.findOne({ email:username }).lean()
-                 console.log(usuario)
+                let usuario = await usuarioModelo.findOne({ email: username }).lean()
+                console.log(usuario)
                 if (!usuario) {
                     //return res.redirect('/views/login?error= ERROR, Datos ingresados incorrectos')
                     return done(null, false)
@@ -88,7 +93,7 @@ export const initPassport = () => {
 
             } catch (error) {
 
-                return done(error,false)
+                return done(error, false)
             }
 
         }
@@ -115,7 +120,7 @@ export const startPassport = () => {
             try {
 
                 let usuario = await usuarioModelo.findOne({ email: profile._json.email })
-                 let rol = "user"
+                let rol = "user"
                 if (!usuario) {
 
                     let userNew = {
@@ -126,7 +131,7 @@ export const startPassport = () => {
 
                     }
 
-                    usuarioModelo.create(userNew)
+                    usuario = await usuarioModelo.create(userNew)
                 }
 
                 return done(null, usuario)
@@ -141,6 +146,8 @@ export const startPassport = () => {
     ))
 
     passport.serializeUser((usuario, done) => {
+        //console.log(await usuario)
+        //console.log(usuario._id)
         return done(null, usuario._id)
     })
     passport.deserializeUser(async (id, done) => {

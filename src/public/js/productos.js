@@ -7,14 +7,17 @@ document.addEventListener('DOMContentLoaded', function () {
     btnAgregar.forEach(button => {
       button.addEventListener('click', function () {
         const productId = this.getAttribute('data-product-id');
+        console.log('va por aca')
         agregarACart(productId)
-        
+        console.log('pasoooo')
     
       });
     });
   
     function agregarACart(productId) {
-      const cartId = '657901d1973ef35614b9b24f'
+      console,log('acaaaa')
+      const cartId = '65a87c904eb892f03b1ec913'
+      console.log('funcioon agregar',cartId)
       const url = `http://localhost:8080/api/carts/${cartId}/product/${productId}`
   
       fetch(url, {

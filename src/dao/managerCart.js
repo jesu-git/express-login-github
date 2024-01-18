@@ -28,9 +28,9 @@ export class carts {
     createCart() {
 
         let carts = this.getCart()
-        
 
-        let id = Math.max(carts.map(x=> x.id),0) + 1
+
+        let id = Math.max(carts.map(x => x.id), 0) + 1
         let productsCart = []
 
 
@@ -81,13 +81,13 @@ export class carts {
         let carts = this.getCart()
         let products = pm.getProduct()
         let exist = carts.findIndex(x => x.id == id)
-        
+
 
 
         if (exist == -1) {
-        let resultado = -1
-        return resutado
-           
+            let resultado = -1
+            return resutado
+
         }
 
         else {

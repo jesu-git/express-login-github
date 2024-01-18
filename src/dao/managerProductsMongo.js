@@ -29,7 +29,7 @@ export class ProductsMongo {
         try {
 
             let productoMongo = await productModelo.create(productNew)
-            let{_id}= productoMongo
+            let { _id } = productoMongo
             return productoMongo
 
         } catch (error) {
@@ -69,10 +69,10 @@ export class ProductsMongo {
     }
     async update(_id, obj) {
 
-          console.log(_id)
+       
 
         try {
-            let product = productModelo.findById({ id })
+            let product = productModelo.findById({ _id })
 
         }
         catch (error) {

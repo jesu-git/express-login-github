@@ -1,6 +1,5 @@
 import __dirname from '../utils.js'
-import path from 'path'
-import { Router} from 'express'
+import { Router } from 'express'
 export const router = Router()
 import { ProductsMongo } from '../dao/managerProductsMongo.js'
 import { productModelo } from '../dao/models/productModelo.js'
@@ -19,31 +18,34 @@ router.get('/', async (req, res) => {
         sortValue = { price: -1 }
     }
 
-     let{ category } = req.query
-
-     if(category == undefined || null){
+    let { category } = req.query
+    if (category == undefined || null) {
         category = {}
-     }
-  
+    } else {
+
+        category = { category: category }
+    }
+
     try {
 
         let products = await productModelo.paginate(category, { limit: limit, page: page, sort: sortValue })
-        let {totalPages, hasNextPage, hasPrevPage, prevPage, nextPage} = products
+        let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
         let prevLink = '', nextLink = '';
         if (hasPrevPage) {
-          prevLink = `localhost:8080/api/products?limit=${limit}&page=${prevPage}`
-        } else { prevLink = null}
+            prevLink = `localhost:8080/api/products?limit=${limit}&page=${prevPage}`
+        } else { prevLink = null }
         if (hasNextPage) {
-          nextLink = `localhost:8080/api/products?limit=${limit}&page=${nextPage}`
-        } else { nextLink = null}
+            nextLink = `localhost:8080/api/products?limit=${limit}&page=${nextPage}`
+        } else { nextLink = null }
         if (!products) {
-          res.status(400).json({ error: 'The products could not be fetched from the DB'})};
+            res.status(400).json({ error: 'El producto no se encuentra en la DB' })
+        };
         res.status(200).send(
             {
-            status:'sucess',
-            payload: products.docs,
-            totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, prevLink, nextLink
-          })
+                status: 'sucess',
+                payload: products.docs,
+                totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, prevLink, nextLink
+            })
 
     } catch (error) {
 
@@ -131,6 +133,7 @@ router.put('/:id', async (req, res) => {
 
     if (!respuesta) res.status(400).json("No se ha podido actualizar el producto")
     else {
+
         res.status(200).json("Actualizado con exito")
 
     }

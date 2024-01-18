@@ -20,7 +20,7 @@ router.get('/errorLogin',(req,res)=>{
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/session/errorLogin' }), async (req, res) => {
 
 
-    req.session.usuario = { nombre: req.user.nombre, email: req.user.email, rol: req.user.rol }
+    req.session.usuario = { nombre: req.user.nombre, email: req.user.email, rol: req.user.rol,cartId:req.user.cartId }
 
     return res.redirect('/views/products')
 
@@ -47,8 +47,9 @@ router.get('/github', passport.authenticate('github', {}), (req, res) => {
 })
 router.get('/callbackgithub', passport.authenticate('github', { failureRedirect: '/api/session/errorGithub' }), (req, res) => {
     req.session.usuario = req.user
-    console.log(req.session.usuario)
+
     return res.redirect('/views/products')
+    
 
 })
 router.get('/errorGithub', (req, res) => {
@@ -56,3 +57,8 @@ router.get('/errorGithub', (req, res) => {
     res.status(200).json({ error: 'Error al autenticar con Github' })
 
 })
+router.get('/current', (req, res) => {
+
+let session = req.session.usuario
+    res.status(200).json({session})
+}) 
