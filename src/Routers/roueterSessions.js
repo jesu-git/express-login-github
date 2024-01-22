@@ -20,7 +20,7 @@ router.get('/errorLogin',(req,res)=>{
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/session/errorLogin' }), async (req, res) => {
 
 
-    req.session.usuario = { nombre: req.user.nombre, email: req.user.email, rol: req.user.rol,cartId:req.user.cartId }
+    req.session.usuario = { first_name: req.user.first_name, email: req.user.email, rol: req.user.rol,cart:req.user.cart }
 
     return res.redirect('/views/products')
 

@@ -16,9 +16,9 @@ export const initPassport = () => {
 
         async (req, username, password, done) => {
 
-            let { nombre, apellido, email, edad } = req.body
+            let { first_name, last_name, email, age } = req.body
 
-            if (!nombre || !apellido || !email || !edad || !password) {
+            if (!first_name || !last_name || !email || !age || !password) {
 
                 //return res.redirect('/views/registro?error="ERROR, introduzca todos los campos"')
                 return done(null, false)
@@ -44,8 +44,8 @@ export const initPassport = () => {
 
             try {
                 let  newCart = await Mongo.createCart()
-                let cartId = newCart._id.valueOf()
-                let usuario = await usuarioModelo.create({ nombre, apellido, email, edad, password,cartId, rol })
+                let cart = newCart._id.valueOf()
+                let usuario = await usuarioModelo.create({ first_name, last_name, email, age, password,cart, rol })
                 // res.redirect(`/views/login?mensaje=El cliente ${email} ha sido creado correctamente`)
                 return done(null, usuario)
 
@@ -123,12 +123,12 @@ export const startPassport = () => {
                 let rol = "user"
                 if (!usuario) {
                     let  newCart = await Mongo.createCart()
-                    let cartId = newCart._id.valueOf()
+                    let cart = newCart._id.valueOf()
                     let userNew = {
-                        nombre: profile._json.name,
+                        first_name: profile._json.name,
                         email: profile._json.email,
-                        edad: "",
-                        cartId:cartId,
+                        age: "",
+                        cart:cart,
                         rol: rol,
                         profile
 

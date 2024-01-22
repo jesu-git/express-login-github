@@ -3,15 +3,15 @@ import mongoose, { Schema } from "mongoose"
 
 const userCollecion = new mongoose.Schema({
 
-    nombre: 'String',
-    apellido: 'String',
+    first_name: 'String',
+    last_name: 'String',
     email: {
         type: 'String',
         unique: true
     },
-    edad: 'Number',
+    age: 'Number',
     password: 'String',
-    cartId:'String',
+    cart:'String',
     rol: {
         type: 'String',
         default: 'user'

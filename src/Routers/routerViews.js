@@ -66,7 +66,7 @@ router.get("/products", async (req, res) => {
 })
 router.get("/cart/:cartId", async (req, res) => {
     try {
-        let cartId = req.session.usuario.cartId
+        let cartId = req.session.usuario.cart
         console.log('carriitoooo',cartId)
         let cart = await CartModelo.findById(cartId).populate('productCarts.productId').lean()
         
@@ -74,7 +74,7 @@ router.get("/cart/:cartId", async (req, res) => {
 
             cartId = 'El carrito esta vacio'
         }
-        res.status(200).render('cart', { products: cart.productCarts, cartId: cartId, ruta })
+        res.status(200).render('cart', { products: cart.productCarts, cart: cartId, ruta })
     } catch (error) {
 
         return console.log(error.message)
