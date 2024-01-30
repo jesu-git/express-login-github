@@ -16,7 +16,7 @@ Swal.fire({
   document.title = `CHAT-${resultado.value}`
 
   socket.on("nuevoConectado", nombre => {
-   
+
     const Toast = Swal.mixin({
       toast: true,
       position: "top-end",
@@ -38,14 +38,14 @@ Swal.fire({
   inputMensaje.addEventListener('keyup', (e) => {
 
     if (e.code === "Enter" && e.target.value.trim().length > 0) {
-      socket.emit("mensaje",{emisor: resultado.value, mensaje: e.target.value })
+      socket.emit("mensaje", { emisor: resultado.value, mensaje: e.target.value })
       e.target.value = ""
     }
 
   })
 
   socket.on("comienzo", mensajes => {
-    mensajes.forEach(mensaje=> {
+    mensajes.forEach(mensaje => {
 
       let parrafo = document.createElement('p')
       parrafo.innerHTML = `<strong> ${mensaje.nombre}</strong> dice: <i>${mensaje.mensaje}</i>`
@@ -70,7 +70,7 @@ Swal.fire({
 
   })
 
-  socket.on("desconectado",usuario=>{
+  socket.on("desconectado", usuario => {
 
     const Toast = Swal.mixin({
       toast: true,

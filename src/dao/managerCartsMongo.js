@@ -1,13 +1,10 @@
 
 import { CartModelo } from "./models/cartsModelo.js"
-import { ProductsMongo } from "./managerProductsMongo.js"
 import { productModelo } from "./models/productModelo.js"
-
-const mongo = new ProductsMongo()
 
 export class cartsMongo {
 
-    async getCart() {
+    static async getCart() {
 
         try {
 
@@ -20,19 +17,18 @@ export class cartsMongo {
 
 
     }
-    async createCart() {
+    static async createCart() {
+
         try {
+
             //let carts = await this.getCart()
             //let id = Math.max(...carts.map(x => x.id), 0) + 1
             let productCarts = []
-
-
             let cart = {
 
                 productCarts
 
             }
-
 
             let cartsMongo = await CartModelo.create(cart)
             console.log(cartsMongo)
@@ -42,15 +38,17 @@ export class cartsMongo {
         } catch (error) {
 
             console.log("No se pudo crear el carrito", error.message)
+
         }
 
 
 
 
     }
-    async addProductsCart(_id, prodId) {
+    static async addProductsCart(_id, prodId) {
 
         try {
+
             let existProduct = await productModelo.findOne({ _id: prodId })
             if (existProduct == null) return null
 
@@ -64,7 +62,7 @@ export class cartsMongo {
 
             let cart = await CartModelo.findOne({ _id: _id })
             let product = cart.productCarts.find(x => x.productId == prodId)
-            console.log(product)
+
             if (product !== undefined) {
 
                 product.quantity++
@@ -78,16 +76,18 @@ export class cartsMongo {
 
                 await CartModelo.findByIdAndUpdate({ _id }, { $push: { 'productCarts': { productId: prodId, quantity: 1 } } })
                 return _id
+
             }
+
         } catch (error) {
 
-            console.log("Error al agregar producto", error.message)
 
-            return
+            return console.log("Error al agregar producto", error.message)
+
 
         }
     }
-    async getProductId(id) {
+    static async getProductId(id) {
 
         try {
 
@@ -97,35 +97,60 @@ export class cartsMongo {
         } catch (error) {
 
             console.log("NO existe el carrito indicado", error.menssage)
+
         }
 
 
 
 
     }
-    async deleteProdcutsCart(id) {
+    static async deleteProdcutsCart(id) {
 
         try {
-            let cart = await CartModelo.findOne({_id:id})
+
+            let cart = await CartModelo.findOne({ _id: id })
             cart.productCarts = []
             console.log(cart)
-            let vaciar = await CartModelo.findByIdAndUpdate({_id : id},{'productCarts':cart.productCarts})
+            let vaciar = await CartModelo.findByIdAndUpdate({ _id: id }, { 'productCarts': cart.productCarts })
+
         } catch (error) {
+
             console.log("fallo al vaciar")
+
         }
 
 
     }
-    async updateArray(id, data) {
+    static async deleteOneProduct(cartId, idProduct) {
 
         try {
-            await CartModelo.updateOne({ _id: id }, { $set: { 'productCarts': data } })
+
+            let cart = await CartModelo.findOne({ _id: cartId })
+            let product = cart.productCarts.filter(x => x.productId != idProduct)
+            await CartModelo.updateOne({ _id: cartId }, { 'productCarts': product })
+
+            return cart
+
         } catch (error) {
+
+            console.log('ERROR, no se pudo eliminar el producto')
+
+        }
+    }
+    static async updateArray(id, data) {
+
+        try {
+
+            await CartModelo.updateOne({ _id: id }, { $set: { 'productCarts': data } })
+
+        } catch (error) {
+
             console.log("Error a intentar actualizar carrito", error.menssage)
+
         }
 
     }
-    async updateQuantity(_id, idProduct, cantidad) {
+    static async updateQuantity(_id, idProduct, cantidad) {
 
         try {
             let cart = await CartModelo.findById(_id)
@@ -146,6 +171,11 @@ export class cartsMongo {
         }
 
 
+
+    }
+    static async cartIdPopulate(id, route) {
+
+        return await CartModelo.findById(id).populate(route).lean()
 
     }
 }

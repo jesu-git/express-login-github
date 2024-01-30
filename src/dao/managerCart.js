@@ -10,7 +10,6 @@ export class carts {
 
         this.route = route
     }
-
     getCart() {
 
 
@@ -24,7 +23,6 @@ export class carts {
             return []
         }
     }
-
     createCart() {
 
         let carts = this.getCart()
@@ -45,7 +43,6 @@ export class carts {
         return cart
 
     }
-
     async addProductsCart(idC, prodId) {
 
         let carts = this.getCart()
@@ -75,7 +72,6 @@ export class carts {
         fs.writeFileSync(this.route, JSON.stringify(carts, null, 5))
         return cart
     }
-
     getProductId(id) {
 
         let carts = this.getCart()

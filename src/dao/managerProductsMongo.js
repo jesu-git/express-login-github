@@ -1,21 +1,22 @@
 import { productModelo } from "./models/productModelo.js"
 
-
-
-
 export class ProductsMongo {
 
-    async getProduct() {
+    static async getProduct() {
 
         try {
+
             return await productModelo.find().lean()
+
         } catch (error) {
+
             console.log("ocurrio un error:", error.message)
             return null
+
         }
 
     }
-    async addProducts(product) {
+    static async addProducts(product) {
 
         //let all_products = await this.getProduct()
 
@@ -35,26 +36,33 @@ export class ProductsMongo {
         } catch (error) {
 
             console.log("Creacion de producto SIN exito")
+
         }
 
     }
-    async getProductById(id) {
+    static async getProductById(id) {
 
 
         try {
+
             let products = await productModelo.findById({ id })
 
             return products
+
         } catch (error) {
+
             console.log(`El producto con id ${id} no existe`)
+
         }
 
 
 
+
     }
-    async deleteProduct(id) {
+    static async deleteProduct(id) {
 
         try {
+
             let product = productModelo.findOne({ _id: id })
             if (product) {
                 let productModific = await productModelo.deleteOne({ _id: id })
@@ -63,20 +71,23 @@ export class ProductsMongo {
             }
         }
         catch (error) {
-            console.log(error.message)
+
+           return console.log(error.message)
+
         }
 
     }
-    async update(_id, obj) {
-
-       
+    static async update(_id, obj) {
 
         try {
+
             let product = productModelo.findById({ _id })
 
         }
         catch (error) {
+
             console.log("El id no se ecuentra en BD..")
+
         }
 
 
@@ -108,9 +119,7 @@ export class ProductsMongo {
 
                 let dato = keys_old.includes(date)
 
-
                 if (!dato) {
-
 
                     throw new error("hubo error")
 
@@ -121,11 +130,15 @@ export class ProductsMongo {
 
             console.log("Verifique sus campos, no son correctos")
             return error.menssage
+
         }
         console.log(obj)
+
         try {
+
             let productModific = await productModelo.findByIdAndUpdate({ _id }, obj)
             return _id
+
         } catch (error) {
 
             console.log("No se pudo modificar el producto")
@@ -133,6 +146,19 @@ export class ProductsMongo {
         }
 
     }
+    static async productPaginate(category,limit, page , sortValue){
+
+        return await productModelo.paginate(category, { limit: limit, page: page, sort: sortValue , lean:true})
+
+    }
+    static async filterForId(id){
+
+       return await productModelo.findById(id)
+    }
+    static async filterForCode(code){
+
+        return await productModelo.find({code:code})
+     }
 }
 
 

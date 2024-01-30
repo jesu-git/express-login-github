@@ -14,7 +14,7 @@
         </tr>
       </thead>
       <tbody>
-        {{#each products }} {{log this}}
+        {{#each this.products }} {{log this}}
           <tr class="bg-white border-b">
             <td class="px-4 py-2">{{this.productId._id}}</td>
             <td class="px-4 py-2">{{this.productId.title}}</td>

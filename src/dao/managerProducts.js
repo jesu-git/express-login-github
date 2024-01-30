@@ -2,8 +2,6 @@
 
 import fs from 'fs'
 
-
-
 //CLASS PRODUCT
 
 export class ProductsManager {

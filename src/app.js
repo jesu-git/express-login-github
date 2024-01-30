@@ -14,22 +14,27 @@ import sessions from 'express-session'
 import MongoStore from 'connect-mongo';
 import { initPassport, startPassport } from './config/config.passport.js'
 import passport from 'passport'
+import { config } from './config/config.js'
+import { connection } from './dao/bd.js'
+
 const app = express()
-const PORT = 8080
+const PORT = config.NPORT
+
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessions({
-    secret: "coderceder",
+    secret: config.secret,
     resave: true,
     saveUninitialized: true,
     store: MongoStore.create({
-        
-        mongoUrl: "mongodb+srv://suarezjesu90:codercoder@eccommer.u1pd7r0.mongodb.net/?retryWrites=true&w=majority",
-        mongoOptions: { dbName: 'Eccommers' },
+
+        mongoUrl: config.mongo_URL,
+        mongoOptions: { dbName: config.dbName },
         ttl: 3600
     })
 }))
+
 startPassport()
 initPassport()
 app.use(passport.initialize())
@@ -56,13 +61,13 @@ app.use('/api/session', router_session)
 const server = app.listen(PORT, () => {
 
     console.log("Server in service")
+
 })
 
 
 export const io = new Server(server)
 
 let usuarios = []
-
 
 io.on("connection", socket => {
     console.log(`Se ha conectado ${socket.id}`)
@@ -72,27 +77,20 @@ io.on("connection", socket => {
         socket.broadcast.emit("nuevoConectado", nombre)
         socket.emit("comienzo", await messageModelo.find().lean())
     })
-
     socket.on("mensaje", async (datos) => {
         await messageModelo.create({ 'nombre': datos.emisor, 'mensaje': datos.mensaje })
 
         io.emit("nuevoMensaje", datos)
     })
     socket.on("disconnect", () => {
+
         let name = usuarios.find(x => x.id === socket.id)
         if (name) {
             io.emit("desconectado", name.nombre)
+
         }
     })
 
-
 })
 
-try {
-    await mongoose.connect("mongodb+srv://suarezjesu90:codercoder@eccommer.u1pd7r0.mongodb.net/?retryWrites=true&w=majority", { dbName: 'Eccommers' })
-    console.log("BD conectada!")
-} catch (error) {
-
-    console.log(error.message)
-
-}
+    await connection(config.mongo_URL, config.dbName )
