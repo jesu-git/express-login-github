@@ -81,7 +81,9 @@ export class ProductsMongo {
 
         try {
 
-            let product = productModelo.findById({ _id })
+            let product = productModelo.findOneAndUpdate({ _id }, obj)
+
+            return product
 
         }
         catch (error) {

@@ -1,8 +1,6 @@
 
-import { CartModelo } from '../dao/models/cartsModelo.js'
-import { productModelo } from '../dao/models/productModelo.js'
-import { TicketModel } from '../dao/models/ticketModel.js'
 import { ServiceCart } from '../service/service.carts.js'
+import { ServiceTicket } from '../service/serviceTicket.js'
 
 
 export class ControllerCart {
@@ -108,37 +106,37 @@ export class ControllerCart {
 
     }
     static async cartPurchase(req, res) {
+
         console.log("apretaste el boton")
+
         try {
 
             let venta = []
             let total = 20
             let sinStock = []
             let code = Date.now()
-            let {email} = req.session.usuario
+            let { email } = req.session.usuario
             console.log(email)
             let { cartId } = req.params
             let cart = await ServiceCart.servicePopulate(cartId, 'productCarts')
             let products = cart.productCarts
-
+            
             products.forEach(async (x) => {
 
-                let producto = await productModelo.find({ _id: x.productId })
+                let producto = await  ServiceCart.productById(x.productId)
                 let onlyProduct = producto[0]
- 
-
                 if (onlyProduct.stock >= x.quantity) {
 
                     let resta = onlyProduct.stock - x.quantity
                     let subTotal = onlyProduct.price * x.quantity
-                    productModelo.findOneAndUpdate({ _id: x.productId }, producto)
+                    ServiceCart.updateProducts( x.productId , producto)
                     let vendido = {
                         producto,
                         subTotal
                     }
-                    console.log("es lo vendido",vendido)
                     venta.push(vendido)
-                    total+= subTotal
+                    total += subTotal
+
                 } else {
 
                     sinStock.push(producto)
@@ -147,26 +145,36 @@ export class ControllerCart {
             })
 
             console.log(total)
-        
-            let ticketM = {
+            setTimeout(async () => {
+            
 
-                code,
-                total,
-                email
-            }
+                cart = await ServiceCart.serviceDeleteP(cartId)
 
-            try {
+                if(sinStock.length < 0){
 
-                let ticket = await TicketModel.create(ticketM)
-                console.log("Se ha creado tu ticket correctamente")
+                    await ServiceCart.serviceUpdateA(cartId,sinStock)
+                }
+                let ticketM = {
 
-            } catch (error) {
+                    code: code,
+                    amount: total,
+                    purchaser: email
+                }
 
-                console.log("no se ha podido realizar el ticket")
+                try {
 
-            }
+                    let ticket = await ServiceTicket.createTicket(ticketM)
+                    console.log("Se ha creado tu ticket correctamente")
 
-            return sinStock
+                } catch (error) {
+
+                    console.log("no se ha podido realizar el ticket")
+
+                }
+
+                return sinStock
+
+            }, 1000)
 
 
         } catch (error) {

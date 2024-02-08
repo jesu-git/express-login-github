@@ -1,4 +1,4 @@
-import { cartsMongo as DAO } from "../dao/class/managerCartsMongo.js";
+import { cartsMongo as DAO, cartsMongo } from "../dao/class/managerCartsMongo.js";
 
 export class ServiceCart {
 
@@ -35,5 +35,30 @@ export class ServiceCart {
         return await DAO.deleteProdcutsCart(id)
 
     }
+    static async productById ( id){
+
+        try {
+          return await  cartsMongo.ProductById(id)
+
+        } catch (error) {
+            
+            console.log("ERROR, no se pudo realizar la busqueda")
+        }
+    }
+    static async updateProducts(_id, obj) {
+
+        try {
+
+            let product = cartsMongo.updateProduct( _id , obj)
+
+            return product
+
+        }
+        catch (error) {
+
+            console.log("El id no se ecuentra en BD..")
+
+        }
+}
 }
 

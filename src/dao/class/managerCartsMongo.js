@@ -174,15 +174,47 @@ export class cartsMongo {
 
     }
     static async cartIdPopulate(id, route) {
-         try {
 
-             return await CartModelo.findById(id).populate(route).lean()
-            
-         } catch (error) {
+        try {
 
-            console.log('ERROR, al realizar populate',error.menssage)
+            return await CartModelo.findById(id).populate(route).lean()
 
-         }
+        } catch (error) {
+
+            console.log('ERROR, al realizar populate', error.menssage)
+
+        }
 
     }
+    static async ProductById(id) {
+
+
+        try {
+
+            let products = await productModelo.findById({ id })
+
+            return products
+
+        } catch (error) {
+
+            console.log(`El producto con id ${id} no existe`)
+
+        }
+    }
+    static async updateProduct(_id, obj) {
+
+        try {
+
+            let product = productModelo.findOneAndUpdate({ _id }, obj)
+
+            return product
+
+        }
+        catch (error) {
+
+            console.log("El id no se ecuentra en BD..")
+
+        }
+    }
+
 }
