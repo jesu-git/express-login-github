@@ -1,4 +1,4 @@
-import { TicketManager } from "../dao/class/managerTicket";
+import { TicketManager } from "../dao/class/managerTicket.js";
 
 
 export class ServiceTicket{
