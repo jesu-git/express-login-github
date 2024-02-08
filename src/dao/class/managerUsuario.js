@@ -1,4 +1,4 @@
-import { usuarioModelo } from "../dao/models/usuariosModel.js"
+import { usuarioModelo } from "../models/usuariosModel.js"
 
 
 export class UsuarioManager {

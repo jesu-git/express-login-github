@@ -1,6 +1,6 @@
 
-import { CartModelo } from "./models/cartsModelo.js"
-import { productModelo } from "./models/productModelo.js"
+import { CartModelo } from "../models/cartsModelo.js"
+import { productModelo } from "../models/productModelo.js"
 
 export class cartsMongo {
 
@@ -87,7 +87,7 @@ export class cartsMongo {
 
         }
     }
-    static async getProductId(id) {
+    static async getCartId(id) {
 
         try {
 
@@ -174,8 +174,15 @@ export class cartsMongo {
 
     }
     static async cartIdPopulate(id, route) {
+         try {
 
-        return await CartModelo.findById(id).populate(route).lean()
+             return await CartModelo.findById(id).populate(route).lean()
+            
+         } catch (error) {
+
+            console.log('ERROR, al realizar populate',error.menssage)
+
+         }
 
     }
 }

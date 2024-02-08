@@ -1,3 +1,5 @@
+import { DTO } from "../DTO/DTO.js"
+
 
 export class ControllerSession {
 
@@ -56,7 +58,40 @@ export class ControllerSession {
     static async current(req, res) {
 
         let session = req.session.usuario
-        res.status(200).json({ session })
+
+        if (session) {
+
+            let mostrar = new DTO(session)
+            res.status(200).json({ mostrar })
+
+        } else {
+
+            res.redirect('/views/login?error= Error, necesita loguearse')
+        }
+
+    }
+
+}
+
+export function authRol(permisos = []) {
+
+    return function (req, res, next) {
+
+    
+
+        if(!req.user || req.user == undefined){
+
+             //res.setHeader('Content-Type','application/json')
+             //res.redirect("/views/login?error=ERROR, no estas logueado.")
+             return console.log("ERROR, no estas logueado")
+        }
+        if (req.user.rol == permisos[0]) {
+
+            return next()
+        }else{
+            res.setHeader('Content-Type','application/json')
+            res.status(403).json("No tiene permisos necesarios para acceder a este sector") 
+        }
 
     }
 

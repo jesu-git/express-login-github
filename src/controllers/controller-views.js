@@ -1,13 +1,14 @@
-import { cartsMongo } from '../dao/managerCartsMongo.js'
-import { ProductsMongo } from '../dao/managerProductsMongo.js'
+
+import { ServiceViews } from '../service/service.views.js'
+
 
 export class views { 
 
 static async getViewsProduct(req, res) {
-
-    let products = await ProductsMongo.getProduct()
+    let usuario = req.session.usuario
+    let products = await ServiceViews.getService()
     res.setHeader('content-type', 'text/html')
-    res.status(200).render("home", { titulo: "home page", products })
+    res.status(200).render("home", { titulo: "home page", products ,usuario})
 
 }
 static async chat(req, res)  {
@@ -17,7 +18,7 @@ static async chat(req, res)  {
 }
 static async realtimeproducts (req, res){
 
-    let products = ProductsMongo.getProduct
+    let products = ServiceViews.getService
     res.status(200).render('websocket', { products, titulo: "Web socket" })
 
 }
@@ -43,12 +44,11 @@ static async productsV(req, res) {
         }
 
 
-        let products = await ProductsMongo.productPaginate(category, limit, page, sortValue)
-        
+        let products = await ServiceViews.servicePaginate(category, limit, page, sortValue)
         let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
         let onlyPruducts = products.docs
         let ruta = true
-        res.status(200).render('product', { data: onlyPruducts,ruta,usuario})
+        res.status(200).render('product', { data: onlyPruducts,ruta,usuario, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage,limit})
 
     } catch (error) {
 
@@ -58,16 +58,18 @@ static async productsV(req, res) {
 
 }
 static async getCart(req, res) {
+
     try {
+        let {usuario} = req.session
         let cartId = req.session.usuario.cart
-        let cart = await cartsMongo.cartIdPopulate(cartId,'productCarts.productId')
+        let cart = await ServiceViews.servicePopulate(cartId,'productCarts.productId')
         let ruta = true
         
         if(cartId == null || cartId == undefined){
 
             cartId = 'El carrito esta vacio'
         }
-        res.status(200).render('cart', { products: cart.productCarts, cart: cartId, ruta })
+        res.status(200).render('cart', { products: cart.productCarts, cart: cartId, ruta ,usuario})
     } catch (error) {
 
         return console.log(error.message)
@@ -80,7 +82,7 @@ static async getCart(req, res) {
 
 static async home(req, res) {
 
-    let products = ProductsMongo.getProduct
+    let products = ServiceViews.getService
     res.setHeader('content-type', 'text/html')
     res.status(200).render("home", { titulo: "home page", products })
 

@@ -1,4 +1,4 @@
-import { productModelo } from "./models/productModelo.js"
+import { productModelo } from "../models/productModelo.js"
 
 export class ProductsMongo {
 

@@ -1,12 +1,16 @@
 
-import { cartsMongo } from '../dao/managerCartsMongo.js'
+import { CartModelo } from '../dao/models/cartsModelo.js'
+import { productModelo } from '../dao/models/productModelo.js'
+import { TicketModel } from '../dao/models/ticketModel.js'
+import { ServiceCart } from '../service/service.carts.js'
+
 
 export class ControllerCart {
 
-    static async carId(req, res) {
+    static async cartId(req, res) {
 
         let { id } = req.params
-        let respuesta = cartsMongo.cartIdPopulate(id, 'productCarts.productId')
+        let respuesta = await ServiceCart.servicePopulate(id, 'productCarts.productId')
 
         if (!respuesta || respuesta == null) return res.status(400).json("El carrito no fue encontrado")
         else { res.status(200).json(respuesta) }
@@ -14,18 +18,18 @@ export class ControllerCart {
     }
     static async create_cart(req, res) {
 
-        let create = await cartsMongo.createCart()
+        let create = await ServiceCart.serviceCreateCart()
         if (!create) return res.status(400).json("Error de creacion de carrito")
         console.log(create)
         return res.status(200).json(`Creacion exitosa!! El id de su carrito es: ${create}`)
-          
+
     }
     static async addProduct(req, res) {
 
         let { id } = req.params
         let { product } = req.params
 
-        let respuesta = await cartsMongo.addProductsCart(id, product)
+        let respuesta = await ServiceCart.serviceAddP(id, product)
         console.log(respuesta)
 
         if (!respuesta || respuesta == null) return res.status(400).json("Error a cargar el producto, error en valores id")
@@ -43,7 +47,7 @@ export class ControllerCart {
 
         try {
 
-            cartsMongo.deleteOneProduct(cartId, idProduct)
+            ServiceCart.serviceDeleteP(cartId, idProduct)
             res.status(200).json("Producto eliminado con exito")
 
         } catch (error) {
@@ -59,7 +63,7 @@ export class ControllerCart {
             let { _id } = req.params
             let data = req.body
 
-            await cartsMongo.updateArray(_id, data)
+            await ServiceCart.serviceUpdateA(_id, data)
             res.status(200).json("Se ha actualizado su carrito")
 
         } catch (error) {
@@ -77,7 +81,7 @@ export class ControllerCart {
 
         try {
 
-            await cartsMongo.updateQuantity(id, idProduct, quantity)
+            await ServiceCart.serviceIQuality(id, idProduct, quantity)
             res.status(200).json("Se a colocado la cantidad ingresada")
 
         } catch (error) {
@@ -87,12 +91,12 @@ export class ControllerCart {
         }
 
     }
-    static async empyCart(req, res) {//VACIA EL CARRITO
+    static async empyCart(req, res) {//VACIA EL CARRITO<
 
         try {
 
             let { id } = req.params
-            let vaciarCart = await cartsMongo.deleteProdcutsCart(id)
+            let vaciarCart = await ServiceCart.serviceEmpyCart(id)
             res.status(200).json("Se a vaciado su carrito")
 
         } catch (error) {
@@ -103,5 +107,74 @@ export class ControllerCart {
 
 
     }
+    static async cartPurchase(req, res) {
+        console.log("apretaste el boton")
+        try {
+
+            let venta = []
+            let total = 20
+            let sinStock = []
+            let code = Date.now()
+            let {email} = req.session.usuario
+            console.log(email)
+            let { cartId } = req.params
+            let cart = await ServiceCart.servicePopulate(cartId, 'productCarts')
+            let products = cart.productCarts
+
+            products.forEach(async (x) => {
+
+                let producto = await productModelo.find({ _id: x.productId })
+                let onlyProduct = producto[0]
+ 
+
+                if (onlyProduct.stock >= x.quantity) {
+
+                    let resta = onlyProduct.stock - x.quantity
+                    let subTotal = onlyProduct.price * x.quantity
+                    productModelo.findOneAndUpdate({ _id: x.productId }, producto)
+                    let vendido = {
+                        producto,
+                        subTotal
+                    }
+                    console.log("es lo vendido",vendido)
+                    venta.push(vendido)
+                    total+= subTotal
+                } else {
+
+                    sinStock.push(producto)
+                    ServiceCart.serviceUpdateA(sinStock)
+                }
+            })
+
+            console.log(total)
+        
+            let ticketM = {
+
+                code,
+                total,
+                email
+            }
+
+            try {
+
+                let ticket = await TicketModel.create(ticketM)
+                console.log("Se ha creado tu ticket correctamente")
+
+            } catch (error) {
+
+                console.log("no se ha podido realizar el ticket")
+
+            }
+
+            return sinStock
+
+
+        } catch (error) {
+            console.log("se rompio")
+        }
+
+
+    }
 
 }
+

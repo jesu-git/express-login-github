@@ -3,6 +3,7 @@ import __dirname from '../utils.js'
 import { Router } from 'express'
 export const router = Router()
 import { views } from '../controllers/controller-views.js'
+import { authRol } from '../controllers/controller-sessions.js'
 
 
 const auth = (req, res, next) => {
@@ -15,9 +16,8 @@ const auth = (req, res, next) => {
     next()
 }
 
-
 router.get('/', views.getViewsProduct)
-router.get("/chat",views.chat)
+router.get("/chat",authRol(["user"]),views.chat)
 router.get('/realtimeproducts',views.realtimeproducts)
 router.get("/products", views.productsV)
 router.get("/cart/:cartId", views.getCart)

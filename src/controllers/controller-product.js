@@ -1,8 +1,8 @@
-import { ProductsMongo } from '../dao/managerProductsMongo.js'
+
 import { io } from '../app.js'
+import { ServiceProduct } from '../service/service.product.js'
 
 export class ControllerProduct {
-
 
     static async getProductHome(req, res) {
 
@@ -25,7 +25,7 @@ export class ControllerProduct {
 
         try {
 
-            let products = await ProductsMongo.productPaginate(category, limit, page, sortValue)
+            let products = await ServiceProduct.servicePaginate(category, limit, page, sortValue)
             let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
             let prevLink = '', nextLink = '';
 
@@ -66,7 +66,7 @@ export class ControllerProduct {
 
         try {
 
-            let product = await ProductsMongo.filterForId(id)
+            let product = await ServiceProduct.serviceId(id)
             res.status(200).json(product)
 
         } catch (error) {
@@ -79,7 +79,7 @@ export class ControllerProduct {
     static async createProduct(req, res) {
 
         let body = req.body
-        let exist = await ProductsMongo.filterForCode(body.code)
+        let exist = await ServiceProduct.filterCode(body.code)
         console.log(exist)
         if (exist.length > 0) return res.status(400).json("El code esta en uso")
 
@@ -121,7 +121,7 @@ export class ControllerProduct {
         let product = body
 
 
-        let respuesta = await ProductsMongo.addProducts(product);
+        let respuesta = await ServiceProduct.addProduct(product);
         if (!respuesta) return res.status(400).json("No se ha podido agregar el producto")
         else {
             res.status(200).json("Producto ingresado correctamente.")
@@ -134,7 +134,7 @@ export class ControllerProduct {
         let modify = req.body
         let { id } = req.params
 
-        let respuesta = await ProductsMongo.update(id, modify)
+        let respuesta = await ServiceProduct.serviceUpdate(id, modify)
 
         if (!respuesta) res.status(400).json("No se ha podido actualizar el producto")
         else {
@@ -147,7 +147,7 @@ export class ControllerProduct {
     static async deleteProduct(req, res) {
 
         let { id } = req.params
-        let respuesta = await ProductsMongo.deleteProduct(id)
+        let respuesta = await ServiceProduct.serviceDelete(id)
 
         if (!respuesta) return res.status(400).json("Error al eliminar, vuelva intentar")
         else {
@@ -160,3 +160,4 @@ export class ControllerProduct {
     }
 
 }
+

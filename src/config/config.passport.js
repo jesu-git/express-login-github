@@ -3,8 +3,8 @@ import github from 'passport-github2'
 import local from 'passport-local'
 import { usuarioModelo } from "../dao/models/usuariosModel.js"
 import { createHash, verificar } from "../utils.js"
-import { cartsMongo } from "../dao/managerCartsMongo.js"
-import { UsuarioManager } from "../dao/managerUsuario.js"
+import { cartsMongo } from "../dao/class/managerCartsMongo.js"
+import { UsuarioManager } from "../dao/class/managerUsuario.js"
 import { config } from "./config.js"
 
 
