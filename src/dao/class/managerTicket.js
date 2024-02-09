@@ -1,13 +1,13 @@
-
+import { ticketModel } from "../models/ticketModel.js"
 
 
 export class TicketManager {
 
 
-    static async createTicket(ticket){
+    static async tCreate(ticket){
       try {
 
-          return await TicketModel.create(ticketM)
+          return await ticketModel.create(ticket)
         
       } catch (error) {
 

@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 
-export const TicketModel = mongoose.model('ticket', new Schema({
+export const ticketModel = mongoose.model('ticket', new Schema({
 
        code:String,
       

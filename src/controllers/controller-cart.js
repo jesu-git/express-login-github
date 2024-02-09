@@ -1,4 +1,5 @@
 
+import { ProductsMongo } from '../dao/class/managerProductsMongo.js'
 import { ServiceCart } from '../service/service.carts.js'
 import { ServiceTicket } from '../service/serviceTicket.js'
 
@@ -108,81 +109,90 @@ export class ControllerCart {
     static async cartPurchase(req, res) {
 
         console.log("apretaste el boton")
-
+        
+        let { cartId } = req.params
         try {
 
             let venta = []
-            let total = 20
+            let total = 0
             let sinStock = []
             let code = Date.now()
             let { email } = req.session.usuario
             console.log(email)
-            let { cartId } = req.params
             let cart = await ServiceCart.servicePopulate(cartId, 'productCarts')
             let products = cart.productCarts
             
-            products.forEach(async (x) => {
 
-                let producto = await  ServiceCart.productById(x.productId)
-                let onlyProduct = producto[0]
-                if (onlyProduct.stock >= x.quantity) {
 
-                    let resta = onlyProduct.stock - x.quantity
-                    let subTotal = onlyProduct.price * x.quantity
-                    ServiceCart.updateProducts( x.productId , producto)
-                    let vendido = {
-                        producto,
-                        subTotal
+            if(email){       
+
+
+                products.forEach(async (x) => {
+    
+                    let producto = await  ServiceCart.productById(x.productId)
+
+                    if ( producto.stock >= x.quantity) {
+    
+                        let resta = producto.stock - x.quantity
+                        let subTotal = producto.price * x.quantity
+                        let obj = {"stock":resta}
+                        ServiceCart.updateProducts(producto._id , obj)
+                        let vendido = {
+                            producto,
+                            subTotal
+                        }
+                        venta.push(vendido)
+                        total += subTotal
+    
+                    } else {
+    
+                        sinStock.push(producto)
+                        ServiceCart.serviceUpdateA(sinStock)
                     }
-                    venta.push(vendido)
-                    total += subTotal
+                })
+    
+                console.log(total)
+                setTimeout(async () => {
+                
+    
+                    cart = await ServiceCart.serviceDeleteP(cartId)
+    
+                    if(sinStock.length < 0){
+    
+                        await ServiceCart.serviceUpdateA(cartId,sinStock)
+                    }
+                    let ticketM = {
+    
+                        code: code,
+                        amount: total,
+                        purchaser: email
+                    }
+    
+                    try {
+    
+                        let ticket = await ServiceTicket.createTicket(ticketM)
+                        console.log("Se ha creado tu ticket correctamente")
 
-                } else {
-
-                    sinStock.push(producto)
-                    ServiceCart.serviceUpdateA(sinStock)
-                }
-            })
-
-            console.log(total)
-            setTimeout(async () => {
+                    } catch (error) {
+                        
+                        console.log("no se ha podido realizar el ticket")
+                        
+                    }
+                    
+                    
+                    
+                }, 1000)
+                
+            }
             
-
-                cart = await ServiceCart.serviceDeleteP(cartId)
-
-                if(sinStock.length < 0){
-
-                    await ServiceCart.serviceUpdateA(cartId,sinStock)
-                }
-                let ticketM = {
-
-                    code: code,
-                    amount: total,
-                    purchaser: email
-                }
-
-                try {
-
-                    let ticket = await ServiceTicket.createTicket(ticketM)
-                    console.log("Se ha creado tu ticket correctamente")
-
-                } catch (error) {
-
-                    console.log("no se ha podido realizar el ticket")
-
-                }
-
-                return sinStock
-
-            }, 1000)
-
-
+            
         } catch (error) {
-            console.log("se rompio")
+            console.log("No se ha podido generar ticket")
         }
-
-
+        return res.status(200).json('creado con exito')
+        
+        
     }
-
+    
 }
 

@@ -6,7 +6,7 @@ export class ServiceTicket{
 
     static async createTicket (ticket){
 
-        return TicketManager.createTicket(ticket)
+        return  await TicketManager.tCreate(ticket)
 
 
     }

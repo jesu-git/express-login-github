@@ -17,7 +17,7 @@ export class ServiceCart {
     }    
     static async serviceDeleteP(cartId , prodId){
 
-        return await DAO.productDeleteCart(cartId,prodId)
+        return await DAO.deleteProdcutsCart(cartId)
         
     }
     static async serviceUpdateA(cartId , prodId){
@@ -49,7 +49,7 @@ export class ServiceCart {
 
         try {
 
-            let product = cartsMongo.updateProduct( _id , obj)
+            let product = cartsMongo.update( _id , obj)
 
             return product
 

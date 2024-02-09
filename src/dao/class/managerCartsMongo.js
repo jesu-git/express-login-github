@@ -191,9 +191,7 @@ export class cartsMongo {
 
         try {
 
-            let products = await productModelo.findById({ id })
-
-            return products
+            return  await productModelo.findById({ _id:id })
 
         } catch (error) {
 
@@ -201,7 +199,7 @@ export class cartsMongo {
 
         }
     }
-    static async updateProduct(_id, obj) {
+    static async update(_id, obj) {
 
         try {
 
@@ -215,6 +213,63 @@ export class cartsMongo {
             console.log("El id no se ecuentra en BD..")
 
         }
+
+
+        const checkObj = (obj) => {
+            return obj === Object(obj);
+        };
+
+
+        if (!checkObj) {
+            console.log("No es un objeto");
+            return;
+        }
+
+        const keys = Object.keys(obj);
+        let checkCode = keys.find(x => x === "code")
+
+        if (checkCode) {
+            let codeC = all_products1.find(x => x.code == obj.code)
+
+            if (codeC) return console.log("El code utilizado ya esta en uso")
+        }
+
+
+        const keys_old = ["title", "description", "code", "price", "status", "stock", "category", "thumbnails"]
+
+        try {
+
+            keys.forEach((date) => {
+
+                let dato = keys_old.includes(date)
+
+                if (!dato) {
+
+                    throw new error("hubo error")
+
+                }
+
+            })
+        } catch (error) {
+
+            console.log("Verifique sus campos, no son correctos")
+            return error.menssage
+
+        }
+        console.log(obj)
+
+        try {
+
+            let productModific = await productModelo.findByIdAndUpdate({ _id }, obj)
+            return _id
+
+        } catch (error) {
+
+            console.log("No se pudo modificar el producto")
+
+        }
+
     }
+    
 
 }

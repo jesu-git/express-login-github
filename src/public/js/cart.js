@@ -15,5 +15,17 @@ btnComprar.addEventListener('click', (e)=>{
           'Content-Type': 'application/json',
         },
   
+        
       })
+
+      .then(response => response.json())
+      .then(data => {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: data,
+          showConfirmButton: false,
+          timer: 1000
+        })})
+   
     })
