@@ -1,5 +1,4 @@
 
-import { ProductsMongo } from '../dao/class/managerProductsMongo.js'
 import { ServiceCart } from '../service/service.carts.js'
 import { ServiceTicket } from '../service/serviceTicket.js'
 
@@ -109,7 +108,7 @@ export class ControllerCart {
     static async cartPurchase(req, res) {
 
         console.log("apretaste el boton")
-        
+
         let { cartId } = req.params
         try {
 
@@ -118,81 +117,82 @@ export class ControllerCart {
             let sinStock = []
             let code = Date.now()
             let { email } = req.session.usuario
-            console.log(email)
             let cart = await ServiceCart.servicePopulate(cartId, 'productCarts')
             let products = cart.productCarts
-            
 
 
-            if(email){       
+
+            if (email && products.length > 0) {
 
 
                 products.forEach(async (x) => {
-    
-                    let producto = await  ServiceCart.productById(x.productId)
 
-                    if ( producto.stock >= x.quantity) {
-    
+                    let producto = await ServiceCart.productById(x.productId)
+
+                    if (producto.stock >= x.quantity) {
+
                         let resta = producto.stock - x.quantity
                         let subTotal = producto.price * x.quantity
-                        let obj = {"stock":resta}
-                        ServiceCart.updateProducts(producto._id , obj)
+                        let obj = { "stock": resta }
+                        ServiceCart.updateProducts(producto._id, obj)
                         let vendido = {
                             producto,
                             subTotal
                         }
                         venta.push(vendido)
                         total += subTotal
-    
+
                     } else {
-    
+
                         sinStock.push(producto)
                         ServiceCart.serviceUpdateA(sinStock)
                     }
                 })
-    
-                console.log(total)
                 setTimeout(async () => {
-                
-    
+
+
                     cart = await ServiceCart.serviceDeleteP(cartId)
-    
-                    if(sinStock.length < 0){
-    
-                        await ServiceCart.serviceUpdateA(cartId,sinStock)
+
+                    if (sinStock.length < 0) {
+
+                        await ServiceCart.serviceUpdateA(cartId, sinStock)
                     }
                     let ticketM = {
-    
+
                         code: code,
                         amount: total,
                         purchaser: email
                     }
-    
+
                     try {
-    
+
                         let ticket = await ServiceTicket.createTicket(ticketM)
                         console.log("Se ha creado tu ticket correctamente")
 
                     } catch (error) {
-                        
+
                         console.log("no se ha podido realizar el ticket")
-                        
+
                     }
-                    
-                    
-                    
+
+
+
                 }, 1000)
-                
+
+
             }
-            
-            
+
+
+            if (products.length <= 0) {
+                console.log("No hay productos en el carrito")
+            }
         } catch (error) {
             console.log("No se ha podido generar ticket")
         }
         return res.status(200).json('creado con exito')
-        
-        
+
+
     }
-    
+
 }
 

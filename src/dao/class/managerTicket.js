@@ -15,4 +15,8 @@ export class TicketManager {
         
       }
     }
+    static async getTicket(){
+
+      return await ticketModel.find().lean()
+    }
 }
