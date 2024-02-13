@@ -1,7 +1,5 @@
 
 import { ServiceCart } from '../service/service.carts.js'
-import { ServiceTicket } from '../service/serviceTicket.js'
-
 
 export class ControllerCart {
 
@@ -165,8 +163,9 @@ export class ControllerCart {
                     }
 
                     try {
+        
 
-                        let ticket = await ServiceTicket.createTicket(ticketM)
+                        let ticket = await ServiceCart.ticket(ticketM)
                         console.log("Se ha creado tu ticket correctamente")
 
                     } catch (error) {

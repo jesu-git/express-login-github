@@ -1,6 +1,7 @@
 
 import { CartModelo } from "../models/cartsModelo.js"
 import { productModelo } from "../models/productModelo.js"
+import { ticketModel } from "../models/ticketModel.js"
 
 export class cartsMongo {
 
@@ -268,6 +269,11 @@ export class cartsMongo {
             console.log("No se pudo modificar el producto")
 
         }
+
+    }
+    static async GTicket(ticket) {
+
+        return await ticketModel.create(ticket)
 
     }
     

@@ -11,37 +11,37 @@ export class ServiceCart {
 
         return await DAO.createCart()
     }
-    static async serviceAddP(id , prodId){
+    static async serviceAddP(id, prodId) {
 
-        return await DAO.addProductsCart(id , prodId)
-    }    
-    static async serviceDeleteP(cartId , prodId){
+        return await DAO.addProductsCart(id, prodId)
+    }
+    static async serviceDeleteP(cartId, prodId) {
 
         return await DAO.deleteProdcutsCart(cartId)
-        
-    }
-    static async serviceUpdateA(cartId , prodId){
 
-        return await DAO.updateArray(cartId,prodId)
-        
     }
-    static async serviceIQuality(id, idProduct, quantity){
+    static async serviceUpdateA(cartId, prodId) {
+
+        return await DAO.updateArray(cartId, prodId)
+
+    }
+    static async serviceIQuality(id, idProduct, quantity) {
 
         return await DAO.insertQuality(id, idProduct, quantity)
-        
+
     }
-    static async serviceEmpyCart(id){
+    static async serviceEmpyCart(id) {
 
         return await DAO.deleteProdcutsCart(id)
 
     }
-    static async productById ( id){
+    static async productById(id) {
 
         try {
-          return await  cartsMongo.ProductById(id)
+            return await cartsMongo.ProductById(id)
 
         } catch (error) {
-            
+
             console.log("ERROR, no se pudo realizar la busqueda")
         }
     }
@@ -49,7 +49,7 @@ export class ServiceCart {
 
         try {
 
-            let product = cartsMongo.update( _id , obj)
+            let product = cartsMongo.update(_id, obj)
 
             return product
 
@@ -59,6 +59,12 @@ export class ServiceCart {
             console.log("El id no se ecuentra en BD..")
 
         }
-}
+    }
+    static async ticket(ticket){
+
+          return await DAO.GTicket(ticket)
+
+
+    }
 }
 
