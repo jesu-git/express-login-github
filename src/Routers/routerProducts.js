@@ -1,8 +1,8 @@
 import __dirname from '../utils.js'
 import { Router } from 'express'
-export const router = Router()
 import { ControllerProduct } from '../controllers/controller-product.js'
 import { authRol } from '../controllers/controller-sessions.js'
+export const router = Router()
 
 
 router.get('/', ControllerProduct.getProductHome)

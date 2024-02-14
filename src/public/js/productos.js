@@ -14,10 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function agregarACart(productId, cart) {
 
-
-    const url = `http://localhost:8080/api/carts/${cart}/product/${productId}`
-
-    fetch(url, {
+    fetch(`/api/carts/${cart}/product/${productId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

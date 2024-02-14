@@ -142,7 +142,7 @@ export class cartsMongo {
 
         try {
 
-            await CartModelo.updateOne({ _id: id }, { $set: { 'productCarts': data } })
+            return await CartModelo.updateOne({ _id: id }, { $set: { 'productCarts': data } })
 
         } catch (error) {
 

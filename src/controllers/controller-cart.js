@@ -105,91 +105,62 @@ export class ControllerCart {
     }
     static async cartPurchase(req, res) {
 
-        console.log("apretaste el boton")
-
         let { cartId } = req.params
-        try {
+        let { email } = req.session.usuario
+        let cart = await ServiceCart.servicePopulate(cartId, 'productCarts.productId')
+        let products = cart.productCarts
 
-            let venta = []
+        if (products.length < 0) {
+
+            return res.status(400).send("No hay productos en tu carrito")
+
+        } else {
+
             let total = 0
             let sinStock = []
-            let code = Date.now()
-            let { email } = req.session.usuario
-            let cart = await ServiceCart.servicePopulate(cartId, 'productCarts')
-            let products = cart.productCarts
+            let conStock = []
+            products.forEach((x) => {
 
+                if (x.productId.stock > x.quantity) {
 
+                    let newStock = x.productId.stock - x.quantity
+                    let subtotal = x.productId.price * x.quantity
+                    ServiceCart.updateProducts(x.productId._id,{ "stock": newStock } )
+                    total += subtotal
+                    conStock.push(x.productId)
+                } else {
+                    let devolucion = { productId: x.productId._id, quantity: x.quantity }
+                    sinStock.push(devolucion)
+                }
 
-            if (email && products.length > 0) {
+            })
+            if (conStock.length > 0) {
 
+                let moldeTicket = {
 
-                products.forEach(async (x) => {
+                    code: Date.now(),
+                    amount: total,
+                    purchaser: email
 
-                    let producto = await ServiceCart.productById(x.productId)
+                }
+                try {
 
-                    if (producto.stock >= x.quantity) {
+                    let ticket = await ServiceCart.ticket(moldeTicket)
+                    await ServiceCart.serviceUpdateA(cartId,sinStock)
+                    console.log("Se realizo su ticket con exito")
+                    return res.status(200).json("Tu compra se realizar con exito")
 
-                        let resta = producto.stock - x.quantity
-                        let subTotal = producto.price * x.quantity
-                        let obj = { "stock": resta }
-                        ServiceCart.updateProducts(producto._id, obj)
-                        let vendido = {
-                            producto,
-                            subTotal
-                        }
-                        venta.push(vendido)
-                        total += subTotal
-
-                    } else {
-
-                        sinStock.push(producto)
-                        ServiceCart.serviceUpdateA(sinStock)
-                    }
-                })
-                setTimeout(async () => {
-
-
-                    cart = await ServiceCart.serviceDeleteP(cartId)
-
-                    if (sinStock.length < 0) {
-
-                        await ServiceCart.serviceUpdateA(cartId, sinStock)
-                    }
-                    let ticketM = {
-
-                        code: code,
-                        amount: total,
-                        purchaser: email
-                    }
-
-                    try {
-        
-
-                        let ticket = await ServiceCart.ticket(ticketM)
-                        console.log("Se ha creado tu ticket correctamente")
-
-                    } catch (error) {
-
-                        console.log("no se ha podido realizar el ticket")
-
-                    }
-
-
-
-                }, 1000)
-
+                } catch (error) {
+                    res.setHeader('Content-Type','application/json')
+                    res.status(400).json("ERROR, No se pudo realizar su compra") 
+                }
+            }else{
+         
+                 res.status(200).json("No hay productos disponibles")
 
             }
 
-
-            if (products.length <= 0) {
-                console.log("No hay productos en el carrito")
-            }
-        } catch (error) {
-            console.log("No se ha podido generar ticket")
         }
-        return res.status(200).json('creado con exito')
-
 
     }
 

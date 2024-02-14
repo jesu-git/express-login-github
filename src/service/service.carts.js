@@ -20,9 +20,9 @@ export class ServiceCart {
         return await DAO.deleteProdcutsCart(cartId)
 
     }
-    static async serviceUpdateA(cartId, prodId) {
+    static async serviceUpdateA(cartId, array) {
 
-        return await DAO.updateArray(cartId, prodId)
+        return await DAO.updateArray(cartId, array)
 
     }
     static async serviceIQuality(id, idProduct, quantity) {

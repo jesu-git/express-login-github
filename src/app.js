@@ -15,7 +15,7 @@ import { initPassport, startPassport } from './config/config.passport.js'
 import passport from 'passport'
 import { config } from './config/config.js'
 import { connection } from './dao/bd.js'
-
+import { router as mockingRouter } from './Routers/routerMocking.js'
 const app = express()
 const PORT = config.NPORT
 
@@ -55,7 +55,7 @@ app.use('/api/products', router_products)
 app.use('/api/carts', router_cart)
 app.use('/views', router_views)
 app.use('/api/session', router_session)
-
+app.use('/mokingProducts', mockingRouter)
 
 const server = app.listen(PORT, () => {
 

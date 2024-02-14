@@ -158,6 +158,5 @@ export class ControllerProduct {
         }
 
     }
-
 }
 
