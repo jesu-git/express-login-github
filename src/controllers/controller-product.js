@@ -1,6 +1,9 @@
 
 import { io } from '../app.js'
 import { ServiceProduct } from '../service/service.product.js'
+import { errorCodes } from '../utils/codeError.js';
+import { ManejoErrores } from '../utils/customError.js';
+import { errorDataInsert } from '../utils/errores.js';
 
 export class ControllerProduct {
 
@@ -89,7 +92,7 @@ export class ControllerProduct {
 
         if (filter.length > 0) {
 
-            return res.status(400).json("No has ingresado todos los campos");
+             throw ManejoErrores.manejo('Complete los datos solicitados','Datos insuficientes',errorCodes.ERROR_DATA_INSERT,errorDataInsert())
 
         }
 

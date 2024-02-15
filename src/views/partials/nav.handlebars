@@ -10,10 +10,17 @@
     <li>
         <a href="/views/perfil">Perfil</a>
     </li>
+    {{#if acceso}}
+<li>
+
+    <a href="/views/chat">Chat</a>
+</li>
+    {{/if}}
     <li>
         <a href="/api/session/logout">Logout</a>
     </li>
 
+    
      {{else}}
     <li>
         <a href="/views/registro">Registro</a>

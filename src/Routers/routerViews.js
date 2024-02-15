@@ -4,7 +4,8 @@
 import { Router } from 'express'
 export const router = Router()
 import { views } from '../controllers/controller-views.js'
-import { authRol } from '../controllers/controller-sessions.js'
+import { authRol } from '../middlewares/checkRol.js'
+
 
 
 const auth = (req, res, next) => {
@@ -18,9 +19,9 @@ const auth = (req, res, next) => {
 }
 
 router.get('/', views.getViewsProduct)
-router.get("/chat",authRol(["user"]),views.chat)
+router.get("/chat",authRol(['user']),views.chat)
 router.get('/realtimeproducts',views.realtimeproducts)
-router.get("/products",authRol(["user"]), views.productsV)
+router.get("/products",authRol(['user']), views.productsV)
 router.get("/cart/:cartId", views.getCart)
 
 //SESSIONS

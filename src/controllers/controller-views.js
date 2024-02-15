@@ -7,13 +7,28 @@ export class views {
 static async getViewsProduct(req, res) {
     let usuario = req.session.usuario
     let products = await ServiceViews.getService()
+    let acceso
+    if(usuario.rol == "user"){
+      acceso = true
+    }else{
+     acceso = false
+    }
     res.setHeader('content-type', 'text/html')
-    res.status(200).render("home", { titulo: "home page", products ,usuario})
+    res.status(200).render("home", { titulo: "home page", products ,usuario,acceso})
 
 }
 static async chat(req, res)  {
+   let {usuario} = req.session
+   let {rol}=req.session.usuario
+   let acceso
+   if(rol == "user"){
+     acceso = true
+   }else{
+    acceso = false
+   }
 
-    res.status(200).render('chat')
+   console.log(acceso)
+    res.status(200).render('chat',{acceso,usuario})
 
 }
 static async realtimeproducts (req, res){
@@ -42,13 +57,20 @@ static async productsV(req, res) {
 
             category = { category: category }
         }
-
+        
+        
+    let acceso
+    if(usuario.rol == "user"){
+      acceso = true
+    }else{
+     acceso = false
+    }
 
         let products = await ServiceViews.servicePaginate(category, limit, page, sortValue)
         let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
         let onlyPruducts = products.docs
         let ruta = true
-        res.status(200).render('product', { data: onlyPruducts,ruta,usuario, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage,limit})
+        res.status(200).render('product', { data: onlyPruducts,ruta,usuario, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage,limit,acceso})
 
     } catch (error) {
 
@@ -82,9 +104,17 @@ static async getCart(req, res) {
 
 static async home(req, res) {
 
+    let {usuario} = req.session
+    let acceso
+    if(usuario.rol == "user"){
+      acceso = true
+    }else{
+     acceso = false
+    }
+
     let products = ServiceViews.getService
     res.setHeader('content-type', 'text/html')
-    res.status(200).render("home", { titulo: "home page", products })
+    res.status(200).render("home", { titulo: "home page", products,acceso })
 
 }
 static async registro(req, res) {
@@ -97,8 +127,14 @@ static async registro(req, res) {
 static async perfil (req, res)  {
 
     let {usuario} = req.session
+    let acceso
+    if(usuario.rol == "user"){
+      acceso = true
+    }else{
+     acceso = false
+    }
     res.setHeader('content-type', 'text/html')
-    res.status(200).render('perfil', {usuario})
+    res.status(200).render('perfil', {usuario,acceso})
 
 }
 static async login (req, res) {

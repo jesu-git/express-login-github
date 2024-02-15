@@ -16,6 +16,7 @@ import passport from 'passport'
 import { config } from './config/config.js'
 import { connection } from './dao/bd.js'
 import { router as mockingRouter } from './Routers/routerMocking.js'
+import { errorHandler } from './middlewares/errorHandler.js'
 const app = express()
 const PORT = config.NPORT
 
@@ -57,6 +58,8 @@ app.use('/views', router_views)
 app.use('/api/session', router_session)
 app.use('/mokingProducts', mockingRouter)
 
+
+app.use(errorHandler)
 const server = app.listen(PORT, () => {
 
     console.log("Server in service")

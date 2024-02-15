@@ -72,27 +72,3 @@ export class ControllerSession {
     }
 
 }
-
-export function authRol(permisos = []) {
-
-    return function (req, res, next) {
-
-    
-
-        if(!req.user || req.user == undefined){
-
-             //res.setHeader('Content-Type','application/json')
-             //res.redirect("/views/login?error=ERROR, no estas logueado.")
-             return console.log("ERROR, no estas logueado")
-        }
-        if (req.user.rol == permisos[0]) {
-
-            return next()
-        }else{
-            res.setHeader('Content-Type','application/json')
-            res.status(403).json("No tiene permisos necesarios para acceder a este sector") 
-        }
-
-    }
-
-}

@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
       .then(response => response.json())
       .then ( data => {
         Swal.fire({
-          position: "top-end",
+          
           icon: "success",
           title: data,
           showConfirmButton: false,
