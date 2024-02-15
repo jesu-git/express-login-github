@@ -1,4 +1,5 @@
-import __dirname from '../utils.js'
+
+
 import { Router } from 'express'
 import { ControllerProduct } from '../controllers/controller-product.js'
 import { authRol } from '../controllers/controller-sessions.js'

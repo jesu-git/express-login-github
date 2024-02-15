@@ -20,7 +20,7 @@ btnComprar.addEventListener('click', (e) => {
       .then(response => response.json())
       .then(data => {
         console.log("holaaa", data)
-        if (data == false) {
+        if (data == "No") {
 
           Swal.fire({
             icon: "error",

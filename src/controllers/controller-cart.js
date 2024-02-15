@@ -148,15 +148,18 @@ export class ControllerCart {
                     let ticket = await ServiceCart.ticket(moldeTicket)
                     await ServiceCart.serviceUpdateA(cartId,sinStock)
                     console.log("Se realizo su ticket con exito")
-                    return res.status(200).json("Tu compra se realizar con exito")
+                    return res.status(200).json("exito")
 
                 } catch (error) {
                     res.setHeader('Content-Type','application/json')
                     res.status(400).json("ERROR, No se pudo realizar su compra") 
                 }
             }else{
-         
-                 res.status(200).json("No hay productos disponibles")
+                if(sinStock.length > 0){
+                      console.log("Sin productos")
+                    return res.status(200).json("No")
+
+                }
 
             }
 

@@ -1,5 +1,6 @@
 
-import __dirname from '../utils.js'
+
+
 import { Router } from 'express'
 export const router = Router()
 import { views } from '../controllers/controller-views.js'
