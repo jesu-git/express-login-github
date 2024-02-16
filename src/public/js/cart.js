@@ -43,8 +43,10 @@ btnComprar.addEventListener('click', (e) => {
         }
       })
 
-
-      //window.location.href = `/views/cart/${cart}`
+      setTimeout(()=>{
+        
+        window.location.href = `http://localhost:8080/views/cart/${cart}`
+      },2000)
   } catch (error) {
 
     Swal.fire({

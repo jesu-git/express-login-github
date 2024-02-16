@@ -30,4 +30,4 @@ router.get('/home', views.home)
 router.get('/registro', views.registro)
 router.get('/perfil', auth, views.perfil)
 router.get('/login', views.login)
-
+router.get('/createProduct',views.addProd,)

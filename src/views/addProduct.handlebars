@@ -2,23 +2,42 @@
 <div style=" color:red">{{error}}</div>
 {{/if}}
 
-<form action="/api/product" method="post">
+{{#if mensaje}}
+<div style=" color:green">{{mensaje}}</div>
+{{/if}}
+<h1>Agregar producto</h1>
+<form action="/api/products" method="post">
 
-<label for="">Nombre:</label>
-<input type="text" name="first_name" placeholder="Nombre"><br>
+    <label for="">Nombre:</label>
+    <input type="text" name="title" placeholder="Nombre"><br>
 
-<label for="">Apellido:</label>
-<input type="text" name="last_name" placeholder="apellido"><br>
+    <label for="">Descripcion:</label>
+    <input type="text" name="description" placeholder="descripcion"><br>
 
-<label for="">Email</label>
-<input type="email" name="email" id="" placeholder="Email"><br>
+    <label for="">Code</label><br>
+    <input type="Number" name="code" id="" placeholder="code"><br><br>
 
-<label for="">Edad:</label><br>
-<input type="Number" name="age" placeholder="edad"><br><br>
+    <label for="">Precio:</label><br>
+    <input type="Number" name="price" placeholder="Precio"><br><br>
 
-<label for="">Password</label>
-<input type="password" name="password" placeholder="password" id=""><br><br><br>
+    <label for="">Status</label><br>
+    <select name="Estado" id="">
+        <option value="true">TRUE</option>
+        <option value="false">FALSE</option>
+    </select><br><br>
 
-<input type="submit" value="Registrar">
+    <label for="">Stock:</label><br>
+    <input type="Number" name="stock" placeholder="Stock"><br><br>
+
+    <label for="">Categoria:</label><br>
+        <select name="Categorias" id="">
+        <option value="fiambre">Fiambres</option>
+        <option value="panificado">Panificados</option>
+        <option value="pescado">Pescados</option>
+        <option value="vegetal">Vegetales</option>
+        <option value="bazar">Bazar</option>
+    </select><br><br>
+
+    <input type="submit" value="Crear">
 
 </form>

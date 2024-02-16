@@ -146,5 +146,13 @@ static async login (req, res) {
     res.status(200).render('login', { mensaje, error })
 
 }
+static async addProd(req, res) {
 
-}   
+    let { error , mensaje} = req.query
+    let {usuario} = req.session
+    
+    res.setHeader('content-type', 'text/html')
+    res.status(200).render('addProduct', { error,usuario,mensaje})
+
+}  
+} 

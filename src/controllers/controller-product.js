@@ -127,7 +127,8 @@ export class ControllerProduct {
         let respuesta = await ServiceProduct.addProduct(product);
         if (!respuesta) return res.status(400).json("No se ha podido agregar el producto")
         else {
-            res.status(200).json("Producto ingresado correctamente.")
+            //res.status(200).json("Producto ingresado correctamente.")
+            res.redirect(`/views/createProduct?mensaje=El producto ${body.title} ha sido creado correctamente`)
             io.emit("newProduct", respuesta)
         }
 

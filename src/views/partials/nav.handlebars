@@ -10,6 +10,11 @@
     <li>
         <a href="/views/perfil">Perfil</a>
     </li>
+    {{#if admin}}
+        <li>
+        <a href="/views/createProduct">Add product</a>
+    </li>
+    {{/if}}
     {{#if acceso}}
 <li>
 
