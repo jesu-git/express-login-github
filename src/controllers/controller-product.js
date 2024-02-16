@@ -3,7 +3,7 @@ import { io } from '../app.js'
 import { ServiceProduct } from '../service/service.product.js'
 import { errorCodes } from '../utils/codeError.js';
 import { ManejoErrores } from '../utils/customError.js';
-import { errorDataInsert } from '../utils/errores.js';
+import { errorConflict, errorDataInsert } from '../utils/errores.js';
 
 export class ControllerProduct {
 
@@ -84,7 +84,7 @@ export class ControllerProduct {
         let body = req.body
         let exist = await ServiceProduct.filterCode(body.code)
         console.log(exist)
-        if (exist.length > 0) return res.status(400).json("El code esta en uso")
+        if (exist.length > 0) throw ManejoErrores.manejo("Error: Code existente", "Debe ingresar un code que no este en uso",errorCodes.CONFLICT,errorConflict())
 
         const date = ['title', 'description', 'price', 'code', 'stock', 'category']
 
@@ -125,7 +125,7 @@ export class ControllerProduct {
 
 
         let respuesta = await ServiceProduct.addProduct(product);
-        if (!respuesta) return res.status(400).json("No se ha podido agregar el producto")
+        if (!respuesta) throw ManejoErrores.manejo('Error conflict', 'No se pudo crear su producto',errorCodes.CONFLICT,errorConflict())
         else {
             //res.status(200).json("Producto ingresado correctamente.")
             res.redirect(`/views/createProduct?mensaje=El producto ${body.title} ha sido creado correctamente`)

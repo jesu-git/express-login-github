@@ -1,5 +1,8 @@
 
 import { ServiceCart } from '../service/service.carts.js'
+import { errorCodes } from '../utils/codeError.js'
+import { ManejoErrores } from '../utils/customError.js'
+import { errorRequest } from '../utils/errores.js'
 
 export class ControllerCart {
 
@@ -8,7 +11,7 @@ export class ControllerCart {
         let { id } = req.params
         let respuesta = await ServiceCart.servicePopulate(id, 'productCarts.productId')
 
-        if (!respuesta || respuesta == null) return res.status(400).json("El carrito no fue encontrado")
+        if (!respuesta || respuesta == null) throw ManejoErrores.manejo("Error request","El carrito ingresado no encontrado",errorCodes.BAD_REQUEST,errorRequest())
         else { res.status(200).json(respuesta) }
 
     }

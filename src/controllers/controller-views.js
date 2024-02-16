@@ -5,13 +5,18 @@ import { ServiceViews } from '../service/service.views.js'
 export class views { 
 
 static async getViewsProduct(req, res) {
-    let usuario = req.session.usuario
+    let {usuario} = req.session
     let products = await ServiceViews.getService()
     let acceso
-    if(usuario.rol == "user"){
-      acceso = true
-    }else{
-     acceso = false
+
+    if (usuario){ 
+
+        if(usuario.rol == "user"){
+          acceso = true
+        }else{
+         acceso = false
+        }
+
     }
     res.setHeader('content-type', 'text/html')
     res.status(200).render("home", { titulo: "home page", products ,usuario,acceso})
