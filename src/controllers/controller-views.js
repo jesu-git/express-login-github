@@ -155,7 +155,9 @@ static async addProd(req, res) {
 
     let { error , mensaje} = req.query
     let {usuario} = req.session
-    
+    if(error){
+        req.logger.info(error.message)
+    }
     res.setHeader('content-type', 'text/html')
     res.status(200).render('addProduct', { error,usuario,mensaje})
 

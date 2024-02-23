@@ -11,5 +11,6 @@ export let config = {
     mongo_URL: process.env.mongo_URL,
     dbName: process.env.dbName,
     passClient: process.env.passClient,
-    secret: process.env.secret
+    secret: process.env.secret,
+    MODE: process.env.MODE
 }

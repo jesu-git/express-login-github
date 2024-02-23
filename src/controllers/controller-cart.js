@@ -11,7 +11,7 @@ export class ControllerCart {
         let { id } = req.params
         let respuesta = await ServiceCart.servicePopulate(id, 'productCarts.productId')
 
-        if (!respuesta || respuesta == null) throw ManejoErrores.manejo("Error request","El carrito ingresado no encontrado",errorCodes.BAD_REQUEST,errorRequest())
+        if (!respuesta || respuesta == null) throw ManejoErrores.manejo("Error request", "El carrito ingresado no encontrado", errorCodes.BAD_REQUEST, errorRequest())
         else { res.status(200).json(respuesta) }
 
     }
@@ -19,7 +19,7 @@ export class ControllerCart {
 
         let create = await ServiceCart.serviceCreateCart()
         if (!create) return res.status(400).json("Error de creacion de carrito")
-        console.log(create)
+        req.logger.info("Creacion correcta de cart")
         return res.status(200).json(`Creacion exitosa!! El id de su carrito es: ${create}`)
 
     }
@@ -29,7 +29,7 @@ export class ControllerCart {
         let { product } = req.params
 
         let respuesta = await ServiceCart.serviceAddP(id, product)
-        console.log(respuesta)
+        req.logger.info(`Se ha agregado correctamente el producto al carrito: ${respuesta._id}`)
 
         if (!respuesta || respuesta == null) return res.status(400).json("Error a cargar el producto, error en valores id")
         else {
@@ -128,7 +128,7 @@ export class ControllerCart {
 
                     let newStock = x.productId.stock - x.quantity
                     let subtotal = x.productId.price * x.quantity
-                    ServiceCart.updateProducts(x.productId._id,{ "stock": newStock } )
+                    ServiceCart.updateProducts(x.productId._id, { "stock": newStock })
                     total += subtotal
                     conStock.push(x.productId)
                 } else {
@@ -149,17 +149,17 @@ export class ControllerCart {
                 try {
 
                     let ticket = await ServiceCart.ticket(moldeTicket)
-                    await ServiceCart.serviceUpdateA(cartId,sinStock)
+                    await ServiceCart.serviceUpdateA(cartId, sinStock)
                     console.log("Se realizo su ticket con exito")
                     return res.status(200).json("exito")
 
                 } catch (error) {
-                    res.setHeader('Content-Type','application/json')
-                    res.status(400).json("ERROR, No se pudo realizar su compra") 
+                    res.setHeader('Content-Type', 'application/json')
+                    res.status(400).json("ERROR, No se pudo realizar su compra")
                 }
-            }else{
-                if(sinStock.length > 0){
-                      console.log("Sin productos")
+            } else {
+                if (sinStock.length > 0) {
+                    console.log("Sin productos")
                     return res.status(200).json("No")
 
                 }

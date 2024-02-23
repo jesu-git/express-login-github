@@ -83,7 +83,7 @@ export class ControllerProduct {
 
         let body = req.body
         let exist = await ServiceProduct.filterCode(body.code)
-        console.log(exist)
+        
         if (exist.length > 0) throw ManejoErrores.manejo("Error: Code existente", "Debe ingresar un code que no este en uso",errorCodes.CONFLICT,errorConflict())
 
         const date = ['title', 'description', 'price', 'code', 'stock', 'category']
@@ -114,7 +114,10 @@ export class ControllerProduct {
             } return acc
         }, [])
 
-        if (incorrectDate.length > 0) return res.status(400).json("Los datos ingresados en un tipo de dato invalido")
+        if (incorrectDate.length > 0){
+            req.logger.error("Los datos incorrectos")
+            return res.status(400).json("Los datos ingresados en un tipo de dato invalido")
+        } 
 
         const thumbnails = body.thumbnails || []
         body.status = body.status || true

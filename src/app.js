@@ -17,10 +17,11 @@ import { config } from './config/config.js'
 import { connection } from './dao/bd.js'
 import { router as mockingRouter } from './Routers/routerMocking.js'
 import { errorHandler } from './middlewares/errorHandler.js'
+import { loggerMid } from './utils/winston.js'
 const app = express()
 const PORT = config.NPORT
 
-
+app.use(loggerMid)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(sessions({

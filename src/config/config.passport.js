@@ -50,14 +50,14 @@ export const initPassport = () => {
                 let newCart = await cartsMongo.createCart()
                 let cart = newCart._id.valueOf()
                 let usuario = await UsuarioManager.userCreate(first_name, last_name, email, age, password, cart, rol)
-                console.log(usuario)
+                req.logger.info(`Usuario ${usuario.email} creado correctamente`)
                 // res.redirect(`/views/login?mensaje=El cliente ${email} ha sido creado correctamente`)
                 return done(null, usuario)
 
             } catch (error) {
 
                 return done(null, false, { mensaje: 'Error, usuario no creado' })
-                //console.log(error.message)
+        
                 //res.redirect('/views/registro?error= Error inesperado')
             }
 
@@ -77,14 +77,13 @@ export const initPassport = () => {
             if (!username || !password) {
 
                 //return res.redirect('/views/login?error="ERROR, introduzca todos los campos"')
-
+                
                 return done(null, false)
             }
             try {
 
                 //password = crypto.createHmac("sha256","codercoder").update(password).digest("hex")
                 let usuario = await UsuarioManager.userEmailFilter(username)
-                console.log(usuario)
                 if (usuario == []) {
                     //return res.redirect('/views/login?error= ERROR, Datos ingresados incorrectos')
                     return done(null, false, { message: 'No concuerdan sus datos' })
@@ -125,10 +124,9 @@ export const startPassport = () => {
         async (accesToken, refreshToken, profile, done) => {
 
             try {
-                console.log('aca', profile)
+                
                 let usuarioBd = await UsuarioManager.userEmailFilter(profile._json.email)
                 let usuario = usuarioBd[0]
-                console.log(usuario)
                 let rol = "user"
 
                 
@@ -136,7 +134,6 @@ export const startPassport = () => {
 
                 let newCart = await cartsMongo.createCart()
                 let cart = newCart._id.valueOf()
-                console.log(cart)
                 let userNew = {
                     first_name: profile._json.name,
                     email: profile._json.email,
@@ -163,8 +160,7 @@ export const startPassport = () => {
     ))
 
     passport.serializeUser((usuario, done) => {
-        //console.log(await usuario)
-        //console.log(usuario._id)
+
         return done(null, usuario._id)
     })
     passport.deserializeUser(async (id, done) => {

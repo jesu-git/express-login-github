@@ -10,12 +10,12 @@ export class ControllerSession {
 
     }
     static async errorRegistro(req, res) {
-
+        
         res.redirect('/views/registro?error=Error en proceso de registro del usuario')
 
     }
     static async errorLogin(req, res) {
-
+        req.logger.error("Error en proceso de loguin")
         res.redirect('/views/login?error= Error en la autenticacion')
 
     }
