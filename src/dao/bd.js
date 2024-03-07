@@ -10,7 +10,7 @@ export  const connection = async(link, db) => {
         console.log("BD conectada!")
 
     } catch(error) {
-
+       
         console.log(error.message)
 
     }

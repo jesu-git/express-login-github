@@ -23,6 +23,10 @@ router.get("/chat",authRol(['user']),views.chat)
 router.get('/realtimeproducts',views.realtimeproducts)
 router.get("/products",authRol(['user']), views.productsV)
 router.get("/cart/:cartId", views.getCart)
+router.get("/recupero",views.recupero)
+router.post("/recuperoTk", views.recuperotk)
+router.get("/change", views.change)
+router.post("/update", views.updatepass)
 
 //SESSIONS
 

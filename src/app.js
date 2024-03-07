@@ -4,6 +4,7 @@ import { router as router_products } from './Routers/routerProducts.js'
 import { router as router_cart } from './Routers/routerCart.js'
 import { router as router_views } from './Routers/routerViews.js'
 import { router as router_session } from './Routers/routerSessions.js'
+import { config } from './config/config.js'
 import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
 import __dirname from './utils.js'
@@ -11,13 +12,15 @@ import path from 'path'
 import { messageModelo } from './dao/models/messageModelo.js'
 import sessions from 'express-session'
 import MongoStore from 'connect-mongo';
+import { connection } from './dao/bd.js'
 import { initPassport, startPassport } from './config/config.passport.js'
 import passport from 'passport'
-import { config } from './config/config.js'
-import { connection } from './dao/bd.js'
 import { router as mockingRouter } from './Routers/routerMocking.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { loggerMid } from './utils/winston.js'
+
+
+
 const app = express()
 const PORT = config.NPORT
 
@@ -94,6 +97,15 @@ io.on("connection", socket => {
         }
     })
 
-})
+})  
 
-    await connection(config.mongo_URL, config.dbName )
+  await connection(config.mongo_URL, config.dbName )
+
+//   try {
+//       mails("suarezjesu90@gmail.com","dale pues", "todo ok!!")
+
+//       console.log("enviado")
+    
+//   } catch (error) {
+//     console.log(error.message)
+//   } 

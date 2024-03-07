@@ -1,10 +1,11 @@
-import Dotenv from "dotenv"
+import Dotenv from 'dotenv'
 
 Dotenv.config({
 
-    override: true,
-    path: '../src/.env'
-})
+     override: true,
+     path: '../src/.env'
+ })
+
 export let config = {
 
     NPORT: process.env.NPORT||8080,
