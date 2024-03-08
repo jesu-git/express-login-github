@@ -4,6 +4,7 @@ import { router as router_products } from './Routers/routerProducts.js'
 import { router as router_cart } from './Routers/routerCart.js'
 import { router as router_views } from './Routers/routerViews.js'
 import { router as router_session } from './Routers/routerSessions.js'
+import { router as router_users } from './Routers/routerUser.js'
 import { config } from './config/config.js'
 import { engine } from 'express-handlebars'
 import { Server } from 'socket.io'
@@ -61,7 +62,7 @@ app.use('/api/carts', router_cart)
 app.use('/views', router_views)
 app.use('/api/session', router_session)
 app.use('/mokingProducts', mockingRouter)
-
+app.use('/api/users',router_users)
 
 app.use(errorHandler)
 const server = app.listen(PORT, () => {

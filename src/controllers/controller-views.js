@@ -19,9 +19,15 @@ export class views {
                 acceso = false
             }
 
+
+        }
+        let admin = false
+        if (usuario.rol == "admin") {
+
+            admin = true
         }
         res.setHeader('content-type', 'text/html')
-        res.status(200).render("home", { titulo: "home page", products, usuario, acceso })
+        res.status(200).render("home", { titulo: "home page", products, usuario, acceso, admin})
 
     }
     static async chat(req, res) {
@@ -35,7 +41,7 @@ export class views {
         }
 
         console.log(acceso)
-        res.status(200).render('chat', { acceso, usuario })
+        res.status(200).render('chat', { acceso, usuario,admin })
 
     }
     static async realtimeproducts(req, res) {
@@ -72,12 +78,16 @@ export class views {
             } else {
                 acceso = false
             }
-
+            let admin = false
+            if (usuario.rol == "admin" || usuario.rol == "premium") {
+    
+                admin = true
+            }
             let products = await ServiceViews.servicePaginate(category, limit, page, sortValue)
             let { totalPages, hasNextPage, hasPrevPage, prevPage, nextPage } = products
             let onlyPruducts = products.docs
             let ruta = true
-            res.status(200).render('product', { data: onlyPruducts, ruta, usuario, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, limit, acceso })
+            res.status(200).render('product', { data: onlyPruducts, ruta, usuario, totalPages, hasNextPage, hasPrevPage, prevPage, nextPage, limit, acceso ,admin})
 
         } catch (error) {
 
@@ -140,8 +150,13 @@ export class views {
         } else {
             acceso = false
         }
+        let admin = false
+        if (usuario.rol == "admin") {
+
+            admin = true
+        }
         res.setHeader('content-type', 'text/html')
-        res.status(200).render('perfil', { usuario, acceso })
+        res.status(200).render('perfil', { usuario, acceso ,admin})
 
     }
     static async login(req, res) {
@@ -160,8 +175,13 @@ export class views {
         if (error) {
             req.logger.info(error.message)
         }
+        let admin = false
+        if (usuario.rol == "admin") {
+
+            admin = true
+        }
         res.setHeader('content-type', 'text/html')
-        res.status(200).render('addProduct', { error, usuario, mensaje })
+        res.status(200).render('addProduct', { error, usuario, mensaje, admin })
 
     }
     static async recupero(req, res) {
@@ -222,14 +242,14 @@ export class views {
 
         if (verificar(objUser, password)) {
 
-            let mError ="Password ya utilizado en el pasado, elija uno nuevo"
+            let mError = "Password ya utilizado en el pasado, elija uno nuevo"
             return res.redirect(`/views/change?error=${mError}&tk=${token}`)
 
         }
 
         password = createHash(password)
         let newPass = { ...objUser, password }
-        
+
         try {
             await ServiceViews.passUpdate(newPass)
             res.redirect("/views/login?mensaje=Tu password fue restablecida con exito")

@@ -82,20 +82,22 @@ export class ControllerProduct {
     static async createProduct(req, res) {
 
         let body = req.body
+        console.log(body)
         let exist = await ServiceProduct.filterCode(body.code)
-        
-        if (exist.length > 0) throw ManejoErrores.manejo("Error: Code existente", "Debe ingresar un code que no este en uso",errorCodes.CONFLICT,errorConflict())
+        let { usuario } = req.session
+        if (exist.length > 0) throw ManejoErrores.manejo("Error: Code existente", "Debe ingresar un code que no este en uso", errorCodes.CONFLICT, errorConflict())
 
         const date = ['title', 'description', 'price', 'code', 'stock', 'category']
-
+        
         let filter = date.filter(x => !(x in body));
-
         if (filter.length > 0) {
 
-             throw ManejoErrores.manejo('Complete los datos solicitados','Datos insuficientes',errorCodes.ERROR_DATA_INSERT,errorDataInsert())
+            throw ManejoErrores.manejo('Complete los datos solicitados', 'Datos insuficientes', errorCodes.ERROR_DATA_INSERT, errorDataInsert())
 
         }
-
+        body.price = parseInt(body.price)
+        body.stock = parseInt(body.stock)
+        console.log(body)
         const typeDate = {
 
             title: 'string',
@@ -113,22 +115,22 @@ export class ControllerProduct {
                 if (typeof body[date] !== type) acc.push(date)
             } return acc
         }, [])
-
-        if (incorrectDate.length > 0){
+console.log(incorrectDate)
+        if (incorrectDate.length > 0) {
             req.logger.error("Los datos incorrectos")
             return res.status(400).json("Los datos ingresados en un tipo de dato invalido")
-        } 
+        }
 
         const thumbnails = body.thumbnails || []
         body.status = body.status || true
 
         if (!Array.isArray(thumbnails)) return res.status(400).json("El campo thumbnails es  inválido ")
-
-        let product = body
+        let owner = usuario.email || "admin"
+        let product = { ...body, owner }
 
 
         let respuesta = await ServiceProduct.addProduct(product);
-        if (!respuesta) throw ManejoErrores.manejo('Error conflict', 'No se pudo crear su producto',errorCodes.CONFLICT,errorConflict())
+        if (!respuesta) throw ManejoErrores.manejo('Error conflict', 'No se pudo crear su producto', errorCodes.CONFLICT, errorConflict())
         else {
             //res.status(200).json("Producto ingresado correctamente.")
             res.redirect(`/views/createProduct?mensaje=El producto ${body.title} ha sido creado correctamente`)

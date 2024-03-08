@@ -21,7 +21,7 @@ const auth = (req, res, next) => {
 router.get('/', views.getViewsProduct)
 router.get("/chat",authRol(['user']),views.chat)
 router.get('/realtimeproducts',views.realtimeproducts)
-router.get("/products",authRol(['user']), views.productsV)
+router.get("/products", views.productsV)
 router.get("/cart/:cartId", views.getCart)
 router.get("/recupero",views.recupero)
 router.post("/recuperoTk", views.recuperotk)
