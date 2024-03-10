@@ -28,6 +28,22 @@ export class ControllerCart {
         let { id } = req.params
         let { product } = req.params
 
+        
+        let { usuario } = req.session
+      
+        let exist =  productModelo.find({cart:usuario.cart})
+
+        if (exist.owner == usuario.email){
+
+            res.setHeader('Content-Type','application/json')
+            res.status(403).json("NoAccess") 
+
+        }else{
+
+            return next()
+
+        }
+
         let respuesta = await ServiceCart.serviceAddP(id, product)
         req.logger.info(`Se ha agregado correctamente el producto al carrito: ${respuesta._id}`)
 
@@ -158,7 +174,7 @@ export class ControllerCart {
                     res.status(400).json("ERROR, No se pudo realizar su compra")
                 }
             } else {
-                if (sinStock.length > 0) {
+                if (sinStock.length >= 0) {
                     console.log("Sin productos")
                     return res.status(200).json("No")
 

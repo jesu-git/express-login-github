@@ -23,13 +23,29 @@ document.addEventListener('DOMContentLoaded', function () {
     })
       .then(response => response.json())
       .then ( data => {
-        Swal.fire({
+
+        if(data == "NoAccess"){
+
+          Swal.fire({
           
-          icon: "success",
-          title: data,
-          showConfirmButton: false,
-          timer: 1000
-        });
+            icon: "warning",
+            title: "No tiene permitido esta accion!",
+            showConfirmButton: false,
+            timer: 1000
+          });
+  
+        }else{
+
+          Swal.fire({
+            
+            icon: "success",
+            title: data,
+            showConfirmButton: false,
+            timer: 1000
+          });
+
+
+        }
 
         console.log("producto agrgado carrectamente")
 

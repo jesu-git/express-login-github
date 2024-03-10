@@ -1,3 +1,4 @@
+import { productModelo } from "../dao/models/productModelo.js"
 import { errorCodes } from "../utils/codeError.js"
 import { ManejoErrores } from "../utils/customError.js"
 import { errorLogueo } from "../utils/errores.js"
@@ -16,7 +17,15 @@ export function authRol(permisos = []) {
              //res.redirect("/views/login?error=ERROR, no estas logueado.")
              throw ManejoErrores.manejo("Error de logueo","Debes loguearte para tener acceso",errorCodes.ERROR_AUTH,errorLogueo())
         }
-        if (req.user.rol == permisos[0]) {
+        let {id} = req.params
+        let producto = productModelo.find({_id:id}).lean()
+
+        if(producto.owner !== req.session.usuario.email){
+            res.setHeader('Content-Type','application/json')
+            res.status(403).json("No tiene permisos necesarios para acceder a este sector") 
+        }
+
+        if (req.user.rol == permisos[0] || permisos[1]) {
 
             return next()
         }else{
