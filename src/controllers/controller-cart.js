@@ -4,6 +4,7 @@ import { errorCodes } from '../utils/codeError.js'
 import { ManejoErrores } from '../utils/customError.js'
 import { errorRequest } from '../utils/errores.js'
 
+
 export class ControllerCart {
 
     static async cartId(req, res) {
@@ -26,24 +27,15 @@ export class ControllerCart {
     static async addProduct(req, res) {
 
         let { id } = req.params
-        let { product } = req.params
-
-        
+        let { product } = req.params   
         let { usuario } = req.session
-      
-        let exist =  productModelo.find({cart:usuario.cart})
-
+     
+        let exist = await ServiceCart.productById(product)
         if (exist.owner == usuario.email){
 
-            res.setHeader('Content-Type','application/json')
-            res.status(403).json("NoAccess") 
-
-        }else{
-
-            return next()
+          return  res.status(403).json("NoAccess") 
 
         }
-
         let respuesta = await ServiceCart.serviceAddP(id, product)
         req.logger.info(`Se ha agregado correctamente el producto al carrito: ${respuesta._id}`)
 

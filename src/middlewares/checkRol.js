@@ -17,13 +17,7 @@ export function authRol(permisos = []) {
              //res.redirect("/views/login?error=ERROR, no estas logueado.")
              throw ManejoErrores.manejo("Error de logueo","Debes loguearte para tener acceso",errorCodes.ERROR_AUTH,errorLogueo())
         }
-        let {id} = req.params
-        let producto = productModelo.find({_id:id}).lean()
-
-        if(producto.owner !== req.session.usuario.email){
-            res.setHeader('Content-Type','application/json')
-            res.status(403).json("No tiene permisos necesarios para acceder a este sector") 
-        }
+ 
 
         if (req.user.rol == permisos[0] || permisos[1]) {
 

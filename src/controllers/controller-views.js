@@ -192,9 +192,8 @@ export class views {
 
         let { email } = req.body
         let user = await ServiceViews.filterUser(email)
-        let onlyUser = user[0]
-        delete onlyUser.password
-        let tk = jwt.sign({ ...onlyUser }, "coder24coder", { expiresIn: "1h" })
+        delete user.password
+        let tk = jwt.sign({ ...user }, "coder24coder", { expiresIn: "1h" })
 
         let message = `Has solicitado restablecer tu contraseña, ingresa a el link <a href="http://localhost:8080/views/change?tk=${tk}">restablecer contraseña</a> para poder realizar la operacion.`
 
@@ -231,7 +230,6 @@ export class views {
 
         let datos = jwt.verify(token, "coder24coder")
         let user = await ServiceViews.filterUser(datos.email)
-        let objUser = user[0]
 
         if (password != password2) {
 
@@ -240,7 +238,7 @@ export class views {
 
         }
 
-        if (verificar(objUser, password)) {
+        if (verificar(user, password)) {
 
             let mError = "Password ya utilizado en el pasado, elija uno nuevo"
             return res.redirect(`/views/change?error=${mError}&tk=${token}`)
@@ -248,7 +246,7 @@ export class views {
         }
 
         password = createHash(password)
-        let newPass = { ...objUser, password }
+        let newPass = { ...user, password }
 
         try {
             await ServiceViews.passUpdate(newPass)

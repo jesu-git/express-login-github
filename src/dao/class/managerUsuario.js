@@ -34,7 +34,7 @@ export class UsuarioManager {
     }
     static async emailFilter(email){
 
-        return await usuarioModelo.find({email:email}).lean()
+        return await usuarioModelo.findOne({email:email}).lean()
 
     }
     static async updateUser(user){
