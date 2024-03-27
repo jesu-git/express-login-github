@@ -17,7 +17,7 @@ export const productSchema = new mongoose.Schema({
 
     category: { type: String, required: true },
 
-    owner: { type: String, required: true },
+    owner: { type: String,require:true , default:"admin"},
 
     thumbnails: [String]
 

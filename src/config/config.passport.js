@@ -8,6 +8,7 @@ import { config } from "./config.js"
 import { createHash, verificar } from "../utils.js"
 
 
+
 export const initPassport = () => {
 
     passport.use('registro', new local.Strategy(
@@ -70,7 +71,7 @@ export const initPassport = () => {
             usernameField: 'email'
         },
         async (username, password, done) => {
-
+       
 
             // let { email } = req.body
 
@@ -94,7 +95,9 @@ export const initPassport = () => {
                     return done(null, false, { message: 'Datos invalidos' })
                 }
 
-
+                delete usuario.password
+                console.log("viendo la onda",usuario)
+             
                 return done(null, usuario)
 
             } catch (error) {

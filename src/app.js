@@ -19,11 +19,29 @@ import passport from 'passport'
 import { router as mockingRouter } from './Routers/routerMocking.js'
 import { errorHandler } from './middlewares/errorHandler.js'
 import { loggerMid } from './utils/winston.js'
-
-
+import swaggerJsdoc from 'swagger-jsdoc'
+import swaggerUi from 'swagger-ui-express'
+import { todo } from 'node:test'
 
 const app = express()
 const PORT = config.NPORT
+
+const options = {
+
+    definition:{
+        openapi:"3.0.0",
+        info:{
+
+            title:"API abm Usuarios",
+            version:"1.0.0",
+            description:"Documentacion API "
+        }
+    },
+    apis:["./docs/*.yaml"]
+}
+
+const specs = swaggerJsdoc(options)
+app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(specs))
 
 app.use(loggerMid)
 app.use(express.json());
@@ -109,4 +127,5 @@ io.on("connection", socket => {
     
 //   } catch (error) {
 //     console.log(error.message)
-//   } 
+//   
+export default todo

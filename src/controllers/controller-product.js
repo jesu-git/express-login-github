@@ -85,11 +85,13 @@ export class ControllerProduct {
         console.log(body)
         let exist = await ServiceProduct.filterCode(body.code)
         let { usuario } = req.session
+        console.log("Probando usuario", usuario)
         if (exist.length > 0) throw ManejoErrores.manejo("Error: Code existente", "Debe ingresar un code que no este en uso", errorCodes.CONFLICT, errorConflict())
 
         const date = ['title', 'description', 'price', 'code', 'stock', 'category']
-        
+
         let filter = date.filter(x => !(x in body));
+        console.log(filter)
         if (filter.length > 0) {
 
             throw ManejoErrores.manejo('Complete los datos solicitados', 'Datos insuficientes', errorCodes.ERROR_DATA_INSERT, errorDataInsert())
@@ -97,6 +99,8 @@ export class ControllerProduct {
         }
         body.price = parseInt(body.price)
         body.stock = parseInt(body.stock)
+        
+        
         console.log(body)
         const typeDate = {
 
@@ -115,8 +119,9 @@ export class ControllerProduct {
                 if (typeof body[date] !== type) acc.push(date)
             } return acc
         }, [])
-console.log(incorrectDate)
+
         if (incorrectDate.length > 0) {
+            console.log("incorrecto",incorrectDate)
             req.logger.error("Los datos incorrectos")
             return res.status(400).json("Los datos ingresados en un tipo de dato invalido")
         }
@@ -128,7 +133,7 @@ console.log(incorrectDate)
         let owner = usuario.email || "admin"
         let product = { ...body, owner }
 
-
+console.log("productro",product)
         let respuesta = await ServiceProduct.addProduct(product);
         if (!respuesta) throw ManejoErrores.manejo('Error conflict', 'No se pudo crear su producto', errorCodes.CONFLICT, errorConflict())
         else {

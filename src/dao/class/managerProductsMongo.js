@@ -25,7 +25,7 @@ export class ProductsMongo {
 
 
         let productNew = { ...product }
-        if (Object.keys(productNew).length > 8) return console.log("Has ingresados más campos de los requeridos")
+        if (Object.keys(productNew).length > 9) return console.log("Has ingresados más campos de los requeridos")
 
         try {
 

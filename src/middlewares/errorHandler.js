@@ -10,7 +10,7 @@ export const errorHandler = (error, req, res, next) => {
             res.setHeader('Content-Type', 'application/json')
             res.status(error.code).json({ error: `${error.name},${error.message}` })
         } else {
-            
+            console.log(error.message)
             res.setHeader('Content-Type', 'application/json')
             res.status(500).json({ ERROR: 'Error inesperado, intente mas tarde' })
         }

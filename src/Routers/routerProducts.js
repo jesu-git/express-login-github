@@ -10,6 +10,6 @@ export const router = Router()
 
 router.get('/', ControllerProduct.getProductHome)
 router.get('/:id',ControllerProduct.getProductId)
-router.post('/',authRol(["admin","premium"]), ControllerProduct.createProduct)
+router.post('/', ControllerProduct.createProduct)
 router.put('/:id',premiumAuth(),authRol(["admin","premium"]),ControllerProduct.updateProduct)
 router.delete("/:id",premiumAuth(),authRol(["admin","premium"]), ControllerProduct.deleteProduct)

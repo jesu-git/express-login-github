@@ -1,0 +1,44 @@
+paths:
+  /api/producs/:
+    get:
+      security:
+        - basicAuth: []
+        - cookieAuth: []
+      summary: Devuelve todos los productos y paginado por defecto de a 10 productos
+      tags:
+        - products
+      responses:
+        "200":
+          description: Los usuarios fueron obtenidos OK desde la DB
+    post:
+      summary: Graba un usuario
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/createUser'
+      responses:
+        "201":
+          description: Usuario creado
+        "400":
+          description: Faltan datos}
+  /api/users/{userId}:
+    get:
+      summary: Obtiene todos los usuarios
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Id usuario a buscar
+          schema:
+            type : string
+            # format: int64
+            # minimum: 1         
+      tags:
+        - Users
+      responses:
+        "200":
+          description: Los usuarios fueron obtenidos OK desde la DB
